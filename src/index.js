@@ -1,7 +1,5 @@
-export default function transshape (from, to) {
-  return 'henk!'
-}
+export { default } from './transshape.js'
 
 export { default as cutPolygon } from './cutPolygon/cutPolygon.js'
 
-export { default as insertPoints } from './insertPoints/insertPoints.js'
+export { default as insertPointsLinearRing } from './insertPointsLinearRing.js'
