@@ -1,6 +1,3 @@
-/*
-  Taken from: https://stackoverflow.com/a/33670691/7237112
-*/
 export default function polygonArea (polygon) {
   if (isLinearRing(polygon)) {
     return getRingArea(polygon)
@@ -25,6 +22,7 @@ function getRingArea (ring) {
   return Math.abs(getSignedRingArea(ring))
 }
 
+// Taken from: https://stackoverflow.com/a/33670691/7237112
 function getSignedRingArea (ring) {
   let total = 0
 

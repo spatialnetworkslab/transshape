@@ -2,6 +2,7 @@
   Taken from flubber:
   https://github.com/veltman/flubber
 */
+
 import polygonArea from '../utils/polygonArea.js'
 
 export default function createTopology (vertices, triangleIndices) {

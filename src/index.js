@@ -3,3 +3,5 @@ export default function transshape (from, to) {
 }
 
 export { default as cutPolygon } from './cutPolygon/cutPolygon.js'
+
+export { default as insertPoints } from './insertPoints/insertPoints.js'
