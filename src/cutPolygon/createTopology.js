@@ -3,8 +3,6 @@
   https://github.com/veltman/flubber
 */
 
-import polygonArea from './polygonArea.js/index.js'
-
 export default function createTopology (vertices, triangleIndices) {
   const arcIndices = {}
   const topology = createEmptyTopology()
@@ -42,10 +40,10 @@ export default function createTopology (vertices, triangleIndices) {
 
 function createEmptyTopology () {
   return {
-    type: "Topology",
+    type: 'Topology',
     objects: {
       triangles: {
-        type: "GeometryCollection",
+        type: 'GeometryCollection',
         geometries: []
       }
     },
@@ -91,8 +89,8 @@ function polygonArea (vertices) {
 
   for (let i = 0, l = vertices.length; i < l; i++) {
     let addX = vertices[i][0]
-    let addY = vertices[i == vertices.length - 1 ? 0 : i + 1][1]
-    let subX = vertices[i == vertices.length - 1 ? 0 : i + 1][0]
+    let addY = vertices[i === vertices.length - 1 ? 0 : i + 1][1]
+    let subX = vertices[i === vertices.length - 1 ? 0 : i + 1][0]
     let subY = vertices[i][1]
 
     total += (addX * addY * 0.5)
