@@ -6,7 +6,7 @@
 import { neighbors, mergeArcs, feature } from 'topojson-client'
 import { bisector } from 'd3-array'
 
-export default function collapseTopology(topology, numberOfPieces) {
+export default function collapseTopology (topology, numberOfPieces) {
   const triangleGeometries = topology.objects.triangles.geometries
   const bisect = bisector(d => d.area).left
 
@@ -19,11 +19,11 @@ export default function collapseTopology(topology, numberOfPieces) {
   }
 
   let geojson = feature(topology, topology.objects.triangles)
-  let geojsonTriangleGeometries = geosjon.features.map(feature => feature.geometry)
+  let geojsonTriangleGeometries = geojson.features.map(feature => feature.geometry)
 
   return geojsonTriangleGeometries
 
-  function mergeSmallestFeature() {
+  function mergeSmallestFeature () {
     const smallest = triangleGeometries[0]
     const neighborIndex = neighbors(triangleGeometries)[0][0]
     const neighbor = triangleGeometries[neighborIndex]
@@ -39,6 +39,6 @@ export default function collapseTopology(topology, numberOfPieces) {
     triangleGeometries.shift()
 
     // Add new merged shape in sorted order
-    geometries.splice(bisect(geometries, merged.area), 0, merged)
+    triangleGeometries.splice(bisect(triangleGeometries, merged.area), 0, merged)
   }
 }
