@@ -6,9 +6,10 @@
 import { neighbors, mergeArcs, feature } from 'topojson-client'
 import { bisector } from 'd3-array'
 
+const bisect = bisector(d => d.area).left
+
 export default function collapseTopology (topology, numberOfPieces) {
   const triangleGeometries = topology.objects.triangles.geometries
-  const bisect = bisector(d => d.area).left
 
   while (triangleGeometries.length > numberOfPieces) {
     mergeSmallestFeature()

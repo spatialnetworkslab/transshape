@@ -2,6 +2,7 @@
   Taken from flubber:
   https://github.com/veltman/flubber
 */
+import polygonArea from '../utils/polygonArea.js'
 
 export default function createTopology (vertices, triangleIndices) {
   const arcIndices = {}
@@ -51,7 +52,7 @@ function createEmptyTopology () {
   }
 }
 
-function createTriangleIndexArcs (triangleIndices, i) {
+export function createTriangleIndexArcs (triangleIndices, i) {
   let a = triangleIndices[i]
   let b = triangleIndices[i + 1]
   let c = triangleIndices[i + 2]
@@ -63,8 +64,8 @@ function createArcSlug (arc) {
   return arc[0] < arc[1] ? arc.join(',') : arc[1] + ',' + arc[0]
 }
 
-function getPoint (vertices, i) {
-  return [vertices[i], vertices[i + 1]]
+export function getPoint (vertices, i) {
+  return [vertices[i * 2], vertices[(i * 2) + 1]]
 }
 
 function createTopoPolygon (area, geometry) {
@@ -79,23 +80,4 @@ function getTriangleArea (vertices, triangleIndexArcs) {
   return Math.abs(
     polygonArea(triangleIndexArcs.map(arc => getPoint(vertices, arc[0])))
   )
-}
-
-/*
-  Taken from: https://stackoverflow.com/a/33670691/7237112
-*/
-function polygonArea (vertices) {
-  let total = 0
-
-  for (let i = 0, l = vertices.length; i < l; i++) {
-    let addX = vertices[i][0]
-    let addY = vertices[i === vertices.length - 1 ? 0 : i + 1][1]
-    let subX = vertices[i === vertices.length - 1 ? 0 : i + 1][0]
-    let subY = vertices[i][1]
-
-    total += (addX * addY * 0.5)
-    total -= (subX * subY * 0.5)
-  }
-
-  return Math.abs(total)
 }
