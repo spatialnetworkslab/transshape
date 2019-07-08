@@ -4,41 +4,41 @@
 */
 
 import { neighbors, mergeArcs, feature } from 'topojson-client'
+import { bisector } from 'd3-array'
 
-// TODO clean up and actually return GeoJSON Polygons (or one MultiPolygon?)
-export default function collapseTopology(topology, numPieces) {
-  const geometries = topology.objects.triangles.geometries,
-    bisect = bisector(d => d.area).left;
+export default function collapseTopology(topology, numberOfPieces) {
+  const triangleGeometries = topology.objects.triangles.geometries
+  const bisect = bisector(d => d.area).left
 
-  while (geometries.length > numPieces) {
-    mergeSmallestFeature();
+  while (triangleGeometries.length > numberOfPieces) {
+    mergeSmallestFeature()
   }
 
-  if (numPieces > geometries.length) {
-    throw new RangeError("Can't collapse topology into " + numPieces + " pieces.");
+  if (numberOfPieces > triangleGeometries.length) {
+    throw new RangeError('Can\'t collapse topology into ' + numberOfPieces + ' pieces.')
   }
 
-  return feature(topology, topology.objects.triangles).features.map(f => {
-    f.geometry.coordinates[0].pop();
-    return f.geometry.coordinates[0];
-  });
+  let geojson = feature(topology, topology.objects.triangles)
+  let geojsonTriangleGeometries = geosjon.features.map(feature => feature.geometry)
+
+  return geojsonTriangleGeometries
 
   function mergeSmallestFeature() {
-    const smallest = geometries[0],
-      neighborIndex = neighbors(geometries)[0][0],
-      neighbor = geometries[neighborIndex],
-      merged = mergeArcs(topology, [smallest, neighbor]);
+    const smallest = triangleGeometries[0]
+    const neighborIndex = neighbors(triangleGeometries)[0][0]
+    const neighbor = triangleGeometries[neighborIndex]
+    const merged = mergeArcs(topology, [smallest, neighbor])
 
     // MultiPolygon -> Polygon
-    merged.area = smallest.area + neighbor.area;
-    merged.type = "Polygon";
-    merged.arcs = merged.arcs[0];
+    merged.area = smallest.area + neighbor.area
+    merged.type = 'Polygon'
+    merged.arcs = merged.arcs[0]
 
     // Delete smallest and its chosen neighbor
-    geometries.splice(neighborIndex, 1);
-    geometries.shift();
+    triangleGeometries.splice(neighborIndex, 1)
+    triangleGeometries.shift()
 
     // Add new merged shape in sorted order
-    geometries.splice(bisect(geometries, merged.area), 0, merged);
+    geometries.splice(bisect(geometries, merged.area), 0, merged)
   }
 }
