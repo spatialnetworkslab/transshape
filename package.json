@@ -30,7 +30,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "rollup -c && jest"
+    "test": "jest"
   },
   "files": [
     "dist"

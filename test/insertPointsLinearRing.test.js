@@ -1,4 +1,4 @@
-import { insertPointsLinearRing } from '../dist/transshape.esm.js'
+import { insertPointsLinearRing } from '../src/'
 
 describe('insertPointsLinearRings', () => {
   test('adds the correct amount of points to a linear ring', () => {
