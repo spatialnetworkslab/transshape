@@ -1,4 +1,5 @@
-export { default } from './transshape.js'
+// no mixed default/named exports
+// export { default } from './transshape.js'
 
 export { default as cutPolygon } from './cutPolygon/cutPolygon.js'
 

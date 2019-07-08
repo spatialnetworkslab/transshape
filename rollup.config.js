@@ -20,7 +20,7 @@ export default [
   // CommonJS (for Node) and ES module (for bundlers) build.
   {
     input: 'src/index.js',
-    external: ['d3-array', 'earcut', 'topojson-client'], // dependencies go here
+    external: ['d3-array', 'earcut', 'topojson-client', 'd3-interpolate'], // dependencies go here
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' }
