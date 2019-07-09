@@ -6,11 +6,13 @@ describe('insertPointsLinearRings', () => {
       [0, 0], [5, 0], [5, 5], [0, 5], [0, 0]
     ]
 
+    let inputLinearRingLength = inputLinearRing.length
+
     let extraPoints = 3
 
     let newLinearRing = insertPointsLinearRing(inputLinearRing, extraPoints)
 
-    let expectedOutputLength = inputLinearRing.length + extraPoints
+    let expectedOutputLength = inputLinearRingLength + extraPoints
 
     expect(newLinearRing.length).toBe(expectedOutputLength)
   })
@@ -41,5 +43,19 @@ describe('insertPointsLinearRings', () => {
     ]
 
     expect(insertPointsLinearRing(inputLinearRing, extraPoints)).toEqual(expectedOutputLinearRing)
+  })
+
+  test('does not modify the input linear ring', () => {
+    let inputLinearRing = [
+      [0, 0], [10, 0], [9, 1], [1, 1], [0, 0]
+    ]
+
+    let inputLinearRingClone = JSON.parse(JSON.stringify(inputLinearRing))
+
+    let extraPoints = 4
+
+    insertPointsLinearRing(inputLinearRing, extraPoints)
+
+    expect(inputLinearRing).toEqual(inputLinearRingClone)
   })
 })

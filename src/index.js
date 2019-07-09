@@ -1,5 +1,5 @@
 // Main function
-export { default as transshape } from './transshape.js'
+export { default as transshape } from './transshape/transshape.js'
 
 // Potentially convenient tools
 export { default as cutPolygon } from './cutPolygon/cutPolygon.js'

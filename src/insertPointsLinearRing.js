@@ -4,6 +4,7 @@ import { getOrderDescending } from './utils/sort.js'
 
 export default function insertPointsLinearRing (inputLinearRing, numberOfAdditionalPoints) {
   let linearRing = cloneLinearRing(inputLinearRing)
+
   let edgeLengths = getEdgeLengths(linearRing)
   let orderedEdgeIds = getOrderDescending(edgeLengths)
 
