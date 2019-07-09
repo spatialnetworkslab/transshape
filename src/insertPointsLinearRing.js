@@ -1,8 +1,3 @@
-/*
-  Taken from flubber:
-  https://github.com/veltman/flubber
-*/
-
 import { interpolate } from 'd3-interpolate'
 import { pointDistance } from './utils/distance.js'
 import { getOrderDescending } from './utils/sort.js'
@@ -76,18 +71,14 @@ function splitEdge (edge) {
 }
 
 function insertOrderedId (orderedIds, edgeLengths, valueIndex, newValue) {
-  // Increase all indices after the valueIndex with 1
-  for (let i = 0; i < orderedIds.length; i++) {
-    let id = orderedIds[i]
-
-    if (id > valueIndex) orderedIds[i] = orderedIds[i] + 1
-  }
-
   // Insert new Ids right place
   let idsWereInserted = false
 
   for (let i = 0; i < orderedIds.length; i++) {
-    let index = orderedIds[i] - 1 // since we just incremented everything by 1
+    let index = orderedIds[i]
+
+    // Increase all indices after the valueIndex with 1
+    if (index > valueIndex) orderedIds[i] = orderedIds[i] + 1
 
     let currentArrayValue = edgeLengths[index]
 
