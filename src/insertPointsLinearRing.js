@@ -14,6 +14,7 @@ export default function insertPointsLinearRing (inputLinearRing, numberOfAdditio
     let longestEdgeId = orderedEdgeIds[0]
 
     let edge = getEdge(linearRing, longestEdgeId)
+
     let edgeLength = edgeLengths[longestEdgeId]
 
     let newEdges = splitEdge(edge)
@@ -21,15 +22,16 @@ export default function insertPointsLinearRing (inputLinearRing, numberOfAdditio
 
     // Remove old edge
     orderedEdgeIds.shift()
-    linearRing.splice(longestEdgeId, 1)
-    edgeLengths.splice(longestEdgeId, 1)
+    linearRing[longestEdgeId] = null
+    edgeLengths[longestEdgeId] = null
 
     // Insert new edges
     orderedEdgeIds = insertOrderedId(orderedEdgeIds, edgeLengths, longestEdgeId, newEdgesLength)
 
-    linearRing.splice(longestEdgeId, 0, newEdges[0][0])
+    linearRing[longestEdgeId] = newEdges[0][0]
     linearRing.splice(longestEdgeId + 1, 0, newEdges[1][0])
-    edgeLengths.splice(longestEdgeId, 0, newEdgesLength)
+
+    edgeLengths[longestEdgeId] = newEdgesLength
     edgeLengths.splice(longestEdgeId + 1, 0, newEdgesLength)
   }
 
@@ -86,10 +88,11 @@ function insertOrderedId (orderedIds, edgeLengths, valueIndex, newValue) {
     if (index > valueIndex) orderedIds[i] = orderedIds[i] + 1
 
     let currentArrayValue = edgeLengths[index]
+    if (currentArrayValue === null) continue
 
     if (newValue >= currentArrayValue) {
-      orderedIds.splice(i + 1, 0, valueIndex)
-      orderedIds.splice(i + 2, 0, valueIndex + 1)
+      orderedIds.splice(i, 0, valueIndex)
+      orderedIds.splice(i + 1, 0, valueIndex + 1)
 
       idsWereInserted = true
       break
@@ -97,8 +100,8 @@ function insertOrderedId (orderedIds, edgeLengths, valueIndex, newValue) {
   }
 
   if (!idsWereInserted) {
-    orderedIds.unshift(valueIndex + 1)
-    orderedIds.unshift(valueIndex)
+    orderedIds.push(valueIndex)
+    orderedIds.push(valueIndex + 1)
   }
 
   return orderedIds
