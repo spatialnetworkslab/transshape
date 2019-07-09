@@ -28,4 +28,18 @@ describe('insertPointsLinearRings', () => {
 
     expect(insertPointsLinearRing(inputLinearRing, extraPoints)).toEqual(expectedOutputLinearRing)
   })
+
+  test('adds the correct points to an irregularly shaped linear ring', () => {
+    let inputLinearRing = [
+      [0, 0], [10, 0], [9, 1], [1, 1], [0, 0]
+    ]
+
+    let extraPoints = 4
+
+    let expectedOutputLinearRing = [
+      [0, 0], [2.5, 0], [5, 0], [7.5, 0], [10, 0], [9, 1], [5, 1], [1, 1], [0, 0]
+    ]
+
+    expect(insertPointsLinearRing(inputLinearRing, extraPoints)).toEqual(expectedOutputLinearRing)
+  })
 })
