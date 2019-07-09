@@ -33,7 +33,7 @@ export default function insertPointsLinearRing (inputLinearRing, numberOfAdditio
   return linearRing
 }
 
-function cloneLinearRing (linearRing) {
+export function cloneLinearRing (linearRing) {
   let clonedLinearRing = []
 
   for (let i = 0; i < linearRing.length; i++) {
