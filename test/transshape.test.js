@@ -54,7 +54,33 @@ describe('transshape', () => {
     expect(interpolator(1)).toEqual(to)
   })
 
-  // test('transforms Polygon w/o holes into another Polygon w/o holes w/ different number of points as expected', () => {
+  test('transforms Polygon w/o holes into another Polygon w/o holes w/ different number of points as expected', () => {
+    let fromSquare = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [4, 1], [4, 4], [1, 4], [1, 1]]
+      ]
+    }
 
-  // })
+    let toStar = {
+      type: 'Polygon',
+      coordinates: [
+        [[2.5, 0], [3, 2], [5, 2.5], [3, 3], [2.5, 5], [2, 3], [0, 2.5], [2, 2], [2.5, 0]]
+      ]
+    }
+
+    let interpolator = transshape(fromSquare, toStar)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [1.5, 1.5], [2.5, 0.5], [3.5, 1.5], [4.5, 2.5],
+          [3.5, 3.5], [2.5, 4.5], [1.5, 3.5], [0.5, 2.5], [1.5, 1.5]
+        ]
+      ]
+    }
+
+    expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
+  })
 })

@@ -5,6 +5,7 @@
 
 import { pointDistance } from './utils/distance.js'
 import { cloneLinearRing } from './insertPointsLinearRing.js'
+import { removeClosingPoint, closeRing } from './utils/closingPoint.js'
 
 export default function rotatePointsLinearRing (inputLinearRing, toLinearRing) {
   let fromLinearRing = cloneLinearRing(inputLinearRing)
@@ -35,25 +36,7 @@ export default function rotatePointsLinearRing (inputLinearRing, toLinearRing) {
     fromLinearRing.splice(fromLinearRing.length, 0, ...spliced)
   }
 
-  fromLinearRing = addClosingPoint(fromLinearRing)
+  fromLinearRing = closeRing(fromLinearRing)
 
   return fromLinearRing
-}
-
-function removeClosingPoint (linearRing) {
-  let firstPoint = linearRing[0]
-  let lastPoint = linearRing[linearRing.length - 1]
-
-  if (firstPoint[0] === lastPoint[0] && firstPoint[1] === lastPoint[1]) {
-    linearRing.pop()
-  }
-
-  return linearRing
-}
-
-function addClosingPoint (linearRing) {
-  let firstPoint = linearRing[0]
-  linearRing.push(firstPoint)
-
-  return linearRing
 }

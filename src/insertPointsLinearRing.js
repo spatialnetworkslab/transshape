@@ -1,9 +1,11 @@
 import { interpolate } from 'd3-interpolate'
 import { pointDistance } from './utils/distance.js'
 import { getOrderDescending } from './utils/sort.js'
+import { removeClosingPoint, closeRing } from './utils/closingPoint.js'
 
 export default function insertPointsLinearRing (inputLinearRing, numberOfAdditionalPoints) {
   let linearRing = cloneLinearRing(inputLinearRing)
+  linearRing = removeClosingPoint(linearRing)
 
   let edgeLengths = getEdgeLengths(linearRing)
   let orderedEdgeIds = getOrderDescending(edgeLengths)
@@ -30,6 +32,8 @@ export default function insertPointsLinearRing (inputLinearRing, numberOfAdditio
     edgeLengths.splice(longestEdgeId, 0, newEdgesLength)
     edgeLengths.splice(longestEdgeId + 1, 0, newEdgesLength)
   }
+
+  linearRing = closeRing(linearRing)
 
   return linearRing
 }
