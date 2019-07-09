@@ -81,6 +81,7 @@ describe('transshape', () => {
       ]
     }
 
+    console.log(interpolator(1e-6).coordinates)
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
 })
