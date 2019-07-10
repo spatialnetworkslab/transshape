@@ -2,7 +2,7 @@ import { interpolate } from 'd3-interpolate'
 import insertPointsLinearRing from '../insertPointsLinearRing.js'
 import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
 import matchLinearRings from '../matchLinearRings.js'
-import linearRingCentroid from '../utils/linearRingCentroid.js'
+// import linearRingCentroid from '../utils/linearRingCentroid.js'
 
 export default function (from, to) {
   let fromOuterRing = from.coordinates[0]
@@ -37,8 +37,8 @@ function prepareLinearRings (fromRing, toRing) {
   return [rotatedFromRing, toRing]
 }
 
-function createInterpolatorNoHoles (from, to, fromRingPrepared, toRingPrepared) {
-  let outerRingInterpolator = interpolate(fromRingPrepared, toRingPrepared)
+function createInterpolatorNoHoles (from, to, fromOuterRingPrepared, toOuterRingPrepared) {
+  let outerRingInterpolator = interpolate(fromOuterRingPrepared, toOuterRingPrepared)
 
   return function interpolator (t) {
     if (t === 0) return from
@@ -113,17 +113,36 @@ function createMatchableHoleInterpolators (from, to, numberOfMatchableHoles) {
 }
 
 function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
-  let interpolators = []
+  // let interpolators = []
 
-  let firstHoleThatNeedsImplodingIndex = polygon.coordinates.length - differenceBetweenNumberOfHoles
+  // let firstHoleThatNeedsImplodingIndex = polygon.coordinates.length - differenceBetweenNumberOfHoles
 
-  for (let i = firstHoleThatNeedsImplodingIndex; i < polygon.coordinates.length; i++) {
-    let hole = polygon.coordinates[i]
-  } 
+  // for (let i = firstHoleThatNeedsImplodingIndex; i < polygon.coordinates.length; i++) {
+  //   let hole = polygon.coordinates[i]
+  // }
 }
 
 function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
-
+  // TODO
 }
 
-function createInterpolatorWithHoles () {}
+function createInterpolatorWithHoles (
+  from, to, fromOuterRingPrepared, toOuterRingPrepared, holeInterpolators
+) {
+  let outerRingInterpolator = interpolate(fromOuterRingPrepared, toOuterRingPrepared)
+
+  return function interpolator (t) {
+    if (t === 0) return from
+    if (t === 1) return to
+
+    let interpolatedLinearRing = outerRingInterpolator(t)
+
+    return {
+      type: 'Polygon',
+      coordinates: [
+        interpolatedLinearRing,
+        ...holeInterpolators.map(interpolator => interpolator(t))
+      ]
+    }
+  }
+}
