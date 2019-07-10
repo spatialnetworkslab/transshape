@@ -1,5 +1,6 @@
 import { interpolate } from 'd3-interpolate'
 import polygonArea from '../utils/polygonArea.js'
+import { getOrderDescending, sortIntoOrder, getInsertionIndexDescending } from '../utils/sort.js'
 
 export default function (geometries, numberOfPieces) {
   let areas = geometries.map(polygonArea)
@@ -21,7 +22,7 @@ export default function (geometries, numberOfPieces) {
       let areaCutTriangle = areaCutTriangles[i]
       let cutTriangle = cutTriangles[i]
 
-      let insertionIndex = getInsertionIndex(areasSorted, areaCutTriangle)
+      let insertionIndex = getInsertionIndexDescending(areasSorted, areaCutTriangle)
 
       areasSorted.splice(insertionIndex, 0, areaCutTriangle)
       geometriesSorted.splice(insertionIndex, 0, cutTriangle)
@@ -29,17 +30,6 @@ export default function (geometries, numberOfPieces) {
   }
 
   return geometriesSorted
-}
-
-function getOrderDescending (array) {
-  let indexArray = array.map((_, i) => i)
-  indexArray.sort((a, b) => array[b] - array[a])
-
-  return indexArray
-}
-
-function sortIntoOrder (array, order) {
-  return order.map(i => array[i])
 }
 
 function cutTriangleInTwo (triangle) {
@@ -60,16 +50,4 @@ function createTriangleGeometry (points) {
     type: 'Polygon',
     coordinates: [points]
   }
-}
-
-function getInsertionIndex (arraySortedDescending, value) {
-  if (arraySortedDescending.length === 0) return 0
-
-  for (let i = arraySortedDescending.length - 1; i >= 0; i--) {
-    let arrayValue = arraySortedDescending[i]
-
-    if (value <= arrayValue) return i
-  }
-
-  return 0
 }
