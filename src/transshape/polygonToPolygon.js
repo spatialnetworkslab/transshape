@@ -70,7 +70,7 @@ function getHoles (polygon, numberOfHoles) {
 function createHoleInterpolators (from, to) {
   let holeInterpolators = []
 
-  let numberOfMatchableHoles = Math.min(from.coordinates.length, to.coordnates.length) - 1
+  let numberOfMatchableHoles = Math.min(from.coordinates.length, to.coordinates.length) - 1
 
   if (numberOfMatchableHoles > 0) {
     holeInterpolators = createMatchableHoleInterpolators(from, to, numberOfMatchableHoles)
