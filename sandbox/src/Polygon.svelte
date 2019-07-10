@@ -24,7 +24,7 @@ $: {
 </script>
 
 <path 
-    d={generatePath($transitionableGeometry)} 
-    fill
-    style={`opacity: ${opacity}`}
+  d={generatePath($transitionableGeometry)} 
+  fill={fill}
+  style={`opacity: ${opacity}`}
 />
