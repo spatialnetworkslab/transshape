@@ -13,7 +13,7 @@ export default function (from, to) {
   }
 
   if (lengthDifference < 0) {
-    fromOuterRing = insertPointsLinearRing(fromOuterRing, lengthDifference)
+    fromOuterRing = insertPointsLinearRing(fromOuterRing, -lengthDifference)
   }
 
   let rotatedFromOuterRing = rotatePointsLinearRing(fromOuterRing, toOuterRing)
