@@ -90,7 +90,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
 
-  test('transforms Polygon w/ holes into another Polygon w/ same number of holes as expected', () => {
+  test('transforms Polygon w/ 1 hole into another Polygon w/ 1 hole as expected', () => {
     let fromPolygon = {
       type: 'Polygon',
       coordinates: [
@@ -114,6 +114,39 @@ describe('transshape: Polygon to Polygon', () => {
       coordinates: [
         [[4.5, 4.5], [1.75, 5], [1, 3], [1.5, 1.5], [2.25, 0.5], [4.5, 1], [4.5, 4.5]],
         [[2, 3.5], [3.5, 3.5], [3.5, 2], [2.5, 2], [2, 2.75], [2, 3.5]]
+      ]
+    }
+
+    expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
+  })
+
+  test('transforms Polygon w/ 2 holes into another Polygon w/ 2 holes with matching as expected', () => {
+    let fromPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [],
+        [],
+        []
+      ]
+    }
+
+    let toPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [],
+        [],
+        []
+      ]
+    }
+
+    let interpolator = transshape(fromPolygon, toPolygon)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [],
+        [],
+        []
       ]
     }
 
