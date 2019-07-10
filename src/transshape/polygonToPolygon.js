@@ -1,28 +1,44 @@
 import { interpolate } from 'd3-interpolate'
 import insertPointsLinearRing from '../insertPointsLinearRing.js'
 import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
+import matchLinearRings from '../matchLinearRings.js'
+import linearRingCentroid from '../utils/linearRingCentroid.js'
 
 export default function (from, to) {
   let fromOuterRing = from.coordinates[0]
   let toOuterRing = to.coordinates[0]
 
-  let lengthDifference = fromOuterRing.length - toOuterRing.length
+  let [fromOuterRingPrepared, toOuterRingPrepared] = prepareLinearRings(fromOuterRing, toOuterRing)
+
+  if (neitherHasHoles(from, to)) {
+    return createInterpolatorNoHoles(from, to, fromOuterRingPrepared, toOuterRingPrepared)
+  }
+
+  let holeInterpolators = createHoleInterpolators(from, to)
+
+  return createInterpolatorWithHoles(
+    from, to, fromOuterRingPrepared, toOuterRingPrepared, holeInterpolators
+  )
+}
+
+function prepareLinearRings (fromRing, toRing) {
+  let lengthDifference = fromRing.length - toRing.length
 
   if (lengthDifference > 0) {
-    toOuterRing = insertPointsLinearRing(toOuterRing, lengthDifference)
+    toRing = insertPointsLinearRing(toRing, lengthDifference)
   }
 
   if (lengthDifference < 0) {
-    fromOuterRing = insertPointsLinearRing(fromOuterRing, -lengthDifference)
+    fromRing = insertPointsLinearRing(fromRing, -lengthDifference)
   }
 
-  let rotatedFromOuterRing = rotatePointsLinearRing(fromOuterRing, toOuterRing)
+  let rotatedFromRing = rotatePointsLinearRing(fromRing, toRing)
 
-  return createLinearRingInterpolator(from, to, rotatedFromOuterRing, toOuterRing)
+  return [rotatedFromRing, toRing]
 }
 
-function createLinearRingInterpolator (from, to, fromOuterRing, toOuterRing) {
-  let outerRingInterpolator = interpolate(fromOuterRing, toOuterRing)
+function createInterpolatorNoHoles (from, to, fromRingPrepared, toRingPrepared) {
+  let outerRingInterpolator = interpolate(fromRingPrepared, toRingPrepared)
 
   return function interpolator (t) {
     if (t === 0) return from
@@ -36,3 +52,78 @@ function createLinearRingInterpolator (from, to, fromOuterRing, toOuterRing) {
     }
   }
 }
+
+function neitherHasHoles (from, to) {
+  return from.coordinates.length === 1 && to.coordinates.length === 1
+}
+
+function getHoles (polygon, numberOfHoles) {
+  let holes = []
+
+  for (let i = 1; i <= numberOfHoles; i++) {
+    holes.push(polygon.coordinates[i])
+  }
+
+  return holes
+}
+
+function createHoleInterpolators (from, to) {
+  let holeInterpolators = []
+
+  let numberOfMatchableHoles = Math.min(from.coordinates.length, to.coordnates.length) - 1
+
+  if (numberOfMatchableHoles > 0) {
+    holeInterpolators = createMatchableHoleInterpolators(from, to, numberOfMatchableHoles)
+  }
+
+  let differenceBetweenNumberOfHoles = from.coordinates.length - to.coordinates.length
+
+  if (differenceBetweenNumberOfHoles > 0) {
+    holeInterpolators.push(...createHoleImploders(from, differenceBetweenNumberOfHoles))
+  }
+
+  if (differenceBetweenNumberOfHoles < 0) {
+    holeInterpolators.push(...createHoleExploders(to, differenceBetweenNumberOfHoles))
+  }
+
+  return holeInterpolators
+}
+
+function createMatchableHoleInterpolators (from, to, numberOfMatchableHoles) {
+  let holeInterpolators = []
+
+  let fromHoles = getHoles(from, numberOfMatchableHoles)
+  let toHoles = getHoles(to, numberOfMatchableHoles)
+
+  let fromOrder = matchLinearRings(fromHoles, toHoles)
+  let fromHolesSorted = fromOrder.map(i => fromHoles[i])
+
+  for (let i = 0; i < numberOfMatchableHoles; i++) {
+    let fromHole = fromHolesSorted[i]
+    let toHole = toHoles[i]
+
+    let [fromHolePrepared, toHolePrepared] = prepareLinearRings(fromHole, toHole)
+
+    let holeInterpolator = interpolate(fromHolePrepared, toHolePrepared)
+
+    holeInterpolators.push(holeInterpolator)
+  }
+
+  return holeInterpolators
+}
+
+function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
+  let interpolators = []
+
+  let firstHoleThatNeedsImplodingIndex = polygon.coordinates.length - differenceBetweenNumberOfHoles
+
+  for (let i = firstHoleThatNeedsImplodingIndex; i < polygon.coordinates.length; i++) {
+    let hole = polygon.coordinates[i]
+  } 
+}
+
+function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
+
+}
+
+function createInterpolatorWithHoles () {}
