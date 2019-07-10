@@ -1,4 +1,4 @@
-import { rotatePointsLinearRing } from '../src/'
+import { rotatePointsLinearRing } from '../../src'
 
 describe('rotatePointsLinearRing', () => {
   test('rotates a linear ring as expected', () => {

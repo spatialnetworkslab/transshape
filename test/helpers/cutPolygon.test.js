@@ -1,4 +1,4 @@
-import { cutPolygon } from '../src/'
+import { cutPolygon } from '../../src'
 
 describe('cutPolygon', () => {
   test('cuts up a square polygon into 2 pieces as expected', () => {
