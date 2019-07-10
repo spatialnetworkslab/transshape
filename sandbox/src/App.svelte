@@ -1,9 +1,5 @@
 <script>
-  import { transshape } from '../../src/'
-
-  export let name
-
-  console.log(transshape)
+  import PolygonToPolygonNoHoles from './examples/PolygonToPolygonNoHoles.svelte'
 </script>
 
-<h1>Hello {name}!</h1>
+<PolygonToPolygonNoHoles />
