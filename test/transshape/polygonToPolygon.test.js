@@ -186,6 +186,40 @@ describe('transshape: Polygon to Polygon', () => {
 
     expect(roundedOutput).toEqual(expectedHalfWayPolygon)
   })
+
+  test('transforms Polygon with 1 hole into another Polygon w/ 2 holes with exploding working as expected', () => {
+    let fromPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 3], [1.5, 3.5], [2, 3.5], [2, 3], [1.5, 3]]
+      ]
+    }
+
+    let toPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2], [1.5, 2.5], [2, 2.5], [2, 2], [1.5, 2]],
+        [[3, 2], [3, 4], [4, 4], [4, 2], [3, 2]]
+      ]
+    }
+
+    let interpolator = transshape(fromPolygon, toPolygon)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2.5], [1.5, 3], [2, 3], [2, 2.5], [1.5, 2.5]],
+        [[3.25, 2.5], [3.25, 3.5], [3.75, 3.5], [3.75, 2.5], [3.25, 2.5]]
+      ]
+    }
+
+    let roundedOutput = roundValuesPolygon(interpolator(0.5))
+
+    expect(roundedOutput).toEqual(expectedHalfWayPolygon)
+  })
 })
 
 function round (value, decimals = 2) {

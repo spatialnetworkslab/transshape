@@ -83,7 +83,7 @@ function createHoleInterpolators (from, to) {
   }
 
   if (differenceBetweenNumberOfHoles < 0) {
-    holeInterpolators.push(...createHoleExploders(to, differenceBetweenNumberOfHoles))
+    holeInterpolators.push(...createHoleExploders(to, -differenceBetweenNumberOfHoles))
   }
 
   return holeInterpolators
@@ -131,7 +131,9 @@ function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
 }
 
 function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
-  // TODO
+  return createHoleImploders(polygon, differenceBetweenNumberOfHoles).map(holeInterpolator => {
+    return t => holeInterpolator(1 - t)
+  })
 }
 
 function makeSmallRectangleAroundPoint ([x, y]) {
