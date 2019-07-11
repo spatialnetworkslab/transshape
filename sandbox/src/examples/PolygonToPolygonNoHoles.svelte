@@ -1,6 +1,23 @@
 <script>
 import Polygon from '../Polygon.svelte'
 
+function generateCircle(x0, y0, radius, segments) {
+  let step = 2 * Math.PI/segments
+  let points = []
+  for(let theta = 0; theta < 2 * Math.PI; theta+=step) {
+    let x = x0 + radius * Math.cos(theta)
+    let y = y0 - radius * Math.sin(theta)
+    points.push([x, y])
+  }
+  points.push(points[0])
+  return points.reverse()
+}
+
+let circle = {
+  type: 'Polygon',
+  coordinates: [generateCircle(250, 250, 150, 30)]
+}
+
 let rectangle = {
   type: 'Polygon',
   coordinates: [
@@ -15,12 +32,12 @@ let star = {
   ]
 }
 
-let geometries = { rectangle, star }
+let geometries = { star, circle }
 
-let currentGeometry = 'rectangle'
+let currentGeometry = 'star'
 
 setInterval(() => {
-  let newValue = currentGeometry === 'rectangle' ? 'star' : 'rectangle'
+  let newValue = currentGeometry === 'star' ? 'circle' : 'star'
   currentGeometry = newValue
 }, 3000)
 </script>

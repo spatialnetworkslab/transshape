@@ -40,7 +40,7 @@
     "test": "jest",
     "sandbox:autobuild": "rollup -c sandbox/rollup.config.js -w",
     "sandbox:serve": "sirv sandbox/public --dev -s",
-    "sandbox:dev": "run-p dev sandbox:serve sandbox:autobuild"
+    "sandbox:dev": "run-p sandbox:serve sandbox:autobuild"
   },
   "files": [
     "dist"
