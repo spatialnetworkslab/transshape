@@ -2,7 +2,7 @@ import { interpolate } from 'd3-interpolate'
 import insertPointsLinearRing from '../insertPointsLinearRing.js'
 import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
 import matchLinearRings from '../matchLinearRings.js'
-// import linearRingCentroid from '../utils/linearRingCentroid.js'
+import linearRingCentroid from '../utils/linearRingCentroid.js'
 
 export default function (from, to) {
   let fromOuterRing = from.coordinates[0]
@@ -113,17 +113,36 @@ function createMatchableHoleInterpolators (from, to, numberOfMatchableHoles) {
 }
 
 function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
-  // let interpolators = []
+  let interpolators = []
 
-  // let firstHoleThatNeedsImplodingIndex = polygon.coordinates.length - differenceBetweenNumberOfHoles
+  let firstHoleThatNeedsImplodingIndex = polygon.coordinates.length - differenceBetweenNumberOfHoles
 
-  // for (let i = firstHoleThatNeedsImplodingIndex; i < polygon.coordinates.length; i++) {
-  //   let hole = polygon.coordinates[i]
-  // }
+  for (let i = firstHoleThatNeedsImplodingIndex; i < polygon.coordinates.length; i++) {
+    let hole = polygon.coordinates[i]
+    let holeCentroid = linearRingCentroid(hole)
+    let smallRectangleAroundCentroid = makeSmallRectangleAroundPoint(holeCentroid)
+
+    let [preparedPolygon, preparedImplodePoint] = prepareLinearRings(hole, smallRectangleAroundCentroid)
+
+    interpolators.push(interpolate(preparedPolygon, preparedImplodePoint))
+  }
+
+  return interpolators
 }
 
 function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
   // TODO
+}
+
+function makeSmallRectangleAroundPoint ([x, y]) {
+  let epsilon = 1e-6
+
+  let x1 = x - epsilon
+  let x2 = x + epsilon
+  let y1 = y - epsilon
+  let y2 = y + epsilon
+
+  return [[x1, y1], [x1, y2], [x2, y2], [x2, y1], [x1, y1]]
 }
 
 function createInterpolatorWithHoles (

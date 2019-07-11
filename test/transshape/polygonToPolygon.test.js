@@ -152,4 +152,57 @@ describe('transshape: Polygon to Polygon', () => {
 
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
+
+  test('transforms Polygon with 2 holes into another Polygon w/ 1 hole with imploding working as expected', () => {
+    let fromPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2], [1.5, 2.5], [2, 2.5], [2, 2], [1.5, 2]],
+        [[3, 2], [3, 4], [4, 4], [4, 2], [3, 2]]
+      ]
+    }
+
+    let toPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 3], [1.5, 3.5], [2, 3.5], [2, 3], [1.5, 3]]
+      ]
+    }
+
+    let interpolator = transshape(fromPolygon, toPolygon)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2.5], [1.5, 3], [2, 3], [2, 2.5], [1.5, 2.5]],
+        [[3.25, 2.5], [3.25, 3.5], [3.75, 3.5], [3.75, 2.5], [3.25, 2.5]]
+      ]
+    }
+
+    let roundedOutput = roundValuesPolygon(interpolator(0.5))
+
+    expect(roundedOutput).toEqual(expectedHalfWayPolygon)
+  })
 })
+
+function round (value, decimals = 2) {
+  let multiplier = 10 ** decimals
+
+  return Math.round(value * multiplier) / multiplier
+}
+
+function roundValuesPolygon (polygon, decimals = 2) {
+  let roundedCoordinates = polygon.coordinates.map(linearRing => {
+    return linearRing.map(point => {
+      return point.map(value => round(value, decimals))
+    })
+  })
+
+  return {
+    type: 'Polygon',
+    coordinates: roundedCoordinates
+  }
+}
