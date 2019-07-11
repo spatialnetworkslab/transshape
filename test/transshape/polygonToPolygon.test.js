@@ -1,7 +1,7 @@
 import { transshape } from '../../src'
 
 describe('transshape: Polygon to Polygon', () => {
-  test('transforms Polygon w/o holes into another Polygon w/o holes w/ same number of points as expected', () => {
+  test('same number of points, no rotation, no holes', () => {
     let from = {
       type: 'Polygon',
       coordinates: [
@@ -30,7 +30,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(1)).toEqual(to)
   })
 
-  test('transforms Polygon w/o holes into another Polygon w/o holes w/ different number of points (w/o rotation) as expected', () => {
+  test('different number of points, no rotation, no holes', () => {
     let fromSquare = {
       type: 'Polygon',
       coordinates: [
@@ -60,7 +60,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
 
-  test('transforms Polygon w/o holes into another Polygon w/o holes w/ different number of points (w/ rotation) as expected', () => {
+  test('different number of points, rotation, no holes', () => {
     let fromSquare = {
       type: 'Polygon',
       coordinates: [
@@ -89,4 +89,154 @@ describe('transshape: Polygon to Polygon', () => {
 
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
+
+  test('different number of points, rotation, both 1 hole', () => {
+    let fromPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [2.5, 0], [4, 1], [4, 4], [2.5, 5], [1, 4], [1, 1]],
+        [[2, 2], [2, 3], [3, 3], [3, 2], [2, 2]]
+      ]
+    }
+
+    let toPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[5, 5], [1, 5], [1, 2], [2, 2], [2, 1], [5, 1], [5, 5]],
+        [[2, 4], [4, 4], [4, 2], [3, 2], [2, 3], [2, 4]]
+      ]
+    }
+
+    let interpolator = transshape(fromPolygon, toPolygon)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[4.5, 4.5], [1.75, 5], [1, 3], [1.5, 1.5], [2.25, 0.5], [4.5, 1], [4.5, 4.5]],
+        [[2, 3.5], [3.5, 3.5], [3.5, 2], [2.5, 2], [2, 2.75], [2, 3.5]]
+      ]
+    }
+
+    expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
+  })
+
+  test('same number of points, no rotation, both 2 holes (hole matching)', () => {
+    let fromPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[3.5, 3.5], [3.5, 4], [4, 4], [4, 3.5], [3.5, 3.5]],
+        [[1.5, 1.5], [1.5, 2], [2, 2], [2, 1.5], [1.5, 1.5]]
+      ]
+    }
+
+    let toPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 4], [1, 4], [1, 1]],
+        [[2, 2], [2, 3], [2.5, 3], [2.5, 2], [2, 2]],
+        [[3.5, 2], [3.5, 3], [4, 3], [4, 2], [3.5, 2]]
+      ]
+    }
+
+    let interpolator = transshape(fromPolygon, toPolygon)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 4.5], [1, 4.5], [1, 1]],
+        [[1.75, 1.75], [1.75, 2.5], [2.25, 2.5], [2.25, 1.75], [1.75, 1.75]],
+        [[3.5, 2.75], [3.5, 3.5], [4, 3.5], [4, 2.75], [3.5, 2.75]]
+      ]
+    }
+
+    expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
+  })
+
+  test('same number of points, no rotation, different number of holes (imploding)', () => {
+    let fromPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2], [1.5, 2.5], [2, 2.5], [2, 2], [1.5, 2]],
+        [[3, 2], [3, 4], [4, 4], [4, 2], [3, 2]]
+      ]
+    }
+
+    let toPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 3], [1.5, 3.5], [2, 3.5], [2, 3], [1.5, 3]]
+      ]
+    }
+
+    let interpolator = transshape(fromPolygon, toPolygon)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2.5], [1.5, 3], [2, 3], [2, 2.5], [1.5, 2.5]],
+        [[3.25, 2.5], [3.25, 3.5], [3.75, 3.5], [3.75, 2.5], [3.25, 2.5]]
+      ]
+    }
+
+    let roundedOutput = roundValuesPolygon(interpolator(0.5))
+
+    expect(roundedOutput).toEqual(expectedHalfWayPolygon)
+  })
+
+  test('same number of points, no rotation, different number of holes (exploding)', () => {
+    let fromPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 3], [1.5, 3.5], [2, 3.5], [2, 3], [1.5, 3]]
+      ]
+    }
+
+    let toPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2], [1.5, 2.5], [2, 2.5], [2, 2], [1.5, 2]],
+        [[3, 2], [3, 4], [4, 4], [4, 2], [3, 2]]
+      ]
+    }
+
+    let interpolator = transshape(fromPolygon, toPolygon)
+
+    let expectedHalfWayPolygon = {
+      type: 'Polygon',
+      coordinates: [
+        [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
+        [[1.5, 2.5], [1.5, 3], [2, 3], [2, 2.5], [1.5, 2.5]],
+        [[3.25, 2.5], [3.25, 3.5], [3.75, 3.5], [3.75, 2.5], [3.25, 2.5]]
+      ]
+    }
+
+    let roundedOutput = roundValuesPolygon(interpolator(0.5))
+
+    expect(roundedOutput).toEqual(expectedHalfWayPolygon)
+  })
 })
+
+function round (value, decimals = 2) {
+  let multiplier = 10 ** decimals
+
+  return Math.round(value * multiplier) / multiplier
+}
+
+function roundValuesPolygon (polygon, decimals = 2) {
+  let roundedCoordinates = polygon.coordinates.map(linearRing => {
+    return linearRing.map(point => {
+      return point.map(value => round(value, decimals))
+    })
+  })
+
+  return {
+    type: 'Polygon',
+    coordinates: roundedCoordinates
+  }
+}
