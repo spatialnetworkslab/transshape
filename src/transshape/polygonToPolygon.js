@@ -73,7 +73,7 @@ function createHoleInterpolators (from, to) {
   let numberOfMatchableHoles = Math.min(from.coordinates.length, to.coordinates.length) - 1
 
   if (numberOfMatchableHoles > 0) {
-    holeInterpolators = createMatchableHoleInterpolators(from, to, numberOfMatchableHoles)
+    holeInterpolators.push(...createMatchableHoleInterpolators(from, to, numberOfMatchableHoles))
   }
 
   let differenceBetweenNumberOfHoles = from.coordinates.length - to.coordinates.length
