@@ -141,7 +141,7 @@ function createInterpolatorWithHoles (
       type: 'Polygon',
       coordinates: [
         interpolatedLinearRing,
-        ...holeInterpolators.map(interpolator => interpolator(t))
+        ...holeInterpolators.map(holeInterpolator => holeInterpolator(t))
       ]
     }
   }
