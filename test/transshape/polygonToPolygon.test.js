@@ -1,7 +1,7 @@
 import { transshape } from '../../src'
 
 describe('transshape: Polygon to Polygon', () => {
-  test('transforms Polygon w/o holes into another Polygon w/o holes w/ same number of points as expected', () => {
+  test('same number of points, no rotation, no holes', () => {
     let from = {
       type: 'Polygon',
       coordinates: [
@@ -30,7 +30,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(1)).toEqual(to)
   })
 
-  test('transforms Polygon w/o holes into another Polygon w/o holes w/ different number of points (w/o rotation) as expected', () => {
+  test('different number of points, no rotation, no holes', () => {
     let fromSquare = {
       type: 'Polygon',
       coordinates: [
@@ -60,7 +60,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
 
-  test('transforms Polygon w/o holes into another Polygon w/o holes w/ different number of points (w/ rotation) as expected', () => {
+  test('different number of points, rotation, no holes', () => {
     let fromSquare = {
       type: 'Polygon',
       coordinates: [
@@ -90,7 +90,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
 
-  test('transforms Polygon w/ 1 hole into another Polygon w/ 1 hole as expected', () => {
+  test('different number of points, rotation, both 1 hole', () => {
     let fromPolygon = {
       type: 'Polygon',
       coordinates: [
@@ -120,7 +120,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
 
-  test('transforms Polygon w/ 2 holes into another Polygon w/ 2 holes with matching as expected', () => {
+  test('same number of points, no rotation, both 2 holes (hole matching)', () => {
     let fromPolygon = {
       type: 'Polygon',
       coordinates: [
@@ -153,7 +153,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
   })
 
-  test('transforms Polygon with 2 holes into another Polygon w/ 1 hole with imploding working as expected', () => {
+  test('same number of points, no rotation, different number of holes (imploding)', () => {
     let fromPolygon = {
       type: 'Polygon',
       coordinates: [
@@ -187,7 +187,7 @@ describe('transshape: Polygon to Polygon', () => {
     expect(roundedOutput).toEqual(expectedHalfWayPolygon)
   })
 
-  test('transforms Polygon with 1 hole into another Polygon w/ 2 holes with exploding working as expected', () => {
+  test('same number of points, no rotation, different number of holes (exploding)', () => {
     let fromPolygon = {
       type: 'Polygon',
       coordinates: [
