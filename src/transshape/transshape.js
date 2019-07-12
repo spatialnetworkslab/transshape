@@ -18,5 +18,5 @@ function ensureValidInput (from, to) {
 function isPolygonOrMultiPolygon (input) {
   return input.constructor === Object &&
     ['Polygon', 'MultiPolygon'].includes(input.type) &&
-    input.hasOwnProperty('coordinates')
+    'coordinates' in input
 }
