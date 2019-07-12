@@ -14,18 +14,18 @@ import sliceUpTriangles from './sliceUpTriangles.js'
 const dimensions = 2
 
 export default function cutPolygon (polygon, numberOfPieces) {
-  let flattenedPolygon = earcut.flatten(polygon.coordinates)
-  let triangleIndices = earcut(flattenedPolygon.vertices, flattenedPolygon.holes, dimensions)
+  const flattenedPolygon = earcut.flatten(polygon.coordinates)
+  const triangleIndices = earcut(flattenedPolygon.vertices, flattenedPolygon.holes, dimensions)
 
-  let numberOfTriangles = getNumberOfTriangles(triangleIndices)
+  const numberOfTriangles = getNumberOfTriangles(triangleIndices)
 
   if (numberOfTriangles >= numberOfPieces) {
-    let topology = createTopology(flattenedPolygon.vertices, triangleIndices)
+    const topology = createTopology(flattenedPolygon.vertices, triangleIndices)
     return collapseTopology(topology, numberOfPieces)
   }
 
   if (numberOfTriangles < numberOfPieces) {
-    let triangleGeometries = createGeometries(flattenedPolygon.vertices, triangleIndices)
+    const triangleGeometries = createGeometries(flattenedPolygon.vertices, triangleIndices)
     return sliceUpTriangles(triangleGeometries, numberOfPieces)
   }
 }
