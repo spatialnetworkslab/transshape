@@ -9,9 +9,11 @@ export default function cutPolygons (polygons, numberOfDesiredAdditionalPolygons
 
   for (let i = 0; i < polygons.length; i++) {
     const polygon = polygons[i]
-    resultingPolygons.push(polygon)
-
     const numberOfCuts = numberOfCutsPerPolygon[i]
+
+    if (numberOfCuts === 0) {
+      resultingPolygons.push(polygon)
+    }
 
     if (numberOfCuts > 0) {
       const numberOfDesiredPolygons = numberOfCuts + 1
