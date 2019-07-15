@@ -34,9 +34,8 @@ export default {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve({ browser: true }),
     commonjs(),
-
     json({
-      include: 'src/files/**',
+      include: 'sandbox/src/files/**',
       compact: true
     }),
 
