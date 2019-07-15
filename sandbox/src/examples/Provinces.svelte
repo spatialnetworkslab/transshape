@@ -7,10 +7,11 @@
 
   const geometries = {}
 
-  for (let i = 0; i < provinces.features.length; i++) {
+  // for (let i = 0; i < provinces.features.length; i++) {
+  for (let i = 4; i < 7; i++) {
     let geometry = provinces.features[i].geometry
     let bbox = getBBox(geometry)
-    let transformToFitExample = createGeoTransform(bbox, { x: [0, 500], y: [500, 0] })
+    let transformToFitExample = createGeoTransform(bbox, { x: [50, 450], y: [50, 450] })
 
     geometries[i.toString()] = transformGeometry(geometry, transformToFitExample)
   }
