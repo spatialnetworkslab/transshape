@@ -1,5 +1,5 @@
 <script>
-  import provinces from '../files/provinces.geojson'
+  import provinces from '../files/provinces.json'
   import PolygonToPolygonTransitioner from '../components/PolygonToPolygonTransitioner.svelte'
   import getBBox from '../utils/getBBox.js'
   import createGeoTransform from '../utils/createGeoTransform.js'
