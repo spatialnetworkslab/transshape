@@ -14,6 +14,8 @@ import sliceUpTriangles from './sliceUpTriangles.js'
 const dimensions = 2
 
 export default function cutPolygon (polygon, numberOfPieces) {
+  if (numberOfPieces < 2) throw new Error('Cannot cut polygon in less than 2 pieces')
+
   const flattenedPolygon = earcut.flatten(polygon.coordinates)
   const triangleIndices = earcut(flattenedPolygon.vertices, flattenedPolygon.holes, dimensions)
 

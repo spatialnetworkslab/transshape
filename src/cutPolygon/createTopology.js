@@ -12,7 +12,7 @@ export default function createTopology (vertices, triangleIndices) {
   for (let i = 0; i < triangleIndices.length; i += 3) {
     const geometry = []
 
-    let triangleIndexArcs = createTriangleIndexArcs(triangleIndices, i)
+    const triangleIndexArcs = createTriangleIndexArcs(triangleIndices, i)
 
     triangleIndexArcs.forEach(arc => {
       const slug = createArcSlug(arc)
@@ -27,8 +27,8 @@ export default function createTopology (vertices, triangleIndices) {
       }
     })
 
-    let area = getTriangleArea(vertices, triangleIndexArcs)
-    let polygon = createTopoPolygon(area, geometry)
+    const area = getTriangleArea(vertices, triangleIndexArcs)
+    const polygon = createTopoPolygon(area, geometry)
 
     topology.objects.triangles.geometries.push(polygon)
   }
@@ -54,9 +54,9 @@ function createEmptyTopology () {
 }
 
 export function createTriangleIndexArcs (triangleIndices, i) {
-  let a = triangleIndices[i]
-  let b = triangleIndices[i + 1]
-  let c = triangleIndices[i + 2]
+  const a = triangleIndices[i]
+  const b = triangleIndices[i + 1]
+  const c = triangleIndices[i + 2]
 
   return [[a, b], [b, c], [c, a]]
 }

@@ -19,8 +19,8 @@ export default function collapseTopology (topology, numberOfPieces) {
     throw new RangeError('Can\'t collapse topology into ' + numberOfPieces + ' pieces.')
   }
 
-  let geojson = feature(topology, topology.objects.triangles)
-  let geojsonTriangleGeometries = geojson.features.map(feature => feature.geometry)
+  const geojson = feature(topology, topology.objects.triangles)
+  const geojsonTriangleGeometries = geojson.features.map(feature => feature.geometry)
 
   return geojsonTriangleGeometries
 
