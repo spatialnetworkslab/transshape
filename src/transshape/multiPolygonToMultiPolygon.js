@@ -17,16 +17,16 @@ export default function multiPolygonToMultiPolygon (from, to) {
     fromPolygons = cutPolygons(fromPolygons, -lengthDifference)
   }
 
+  return createInterpolatorPolygons(from, to, fromPolygons, toPolygons)
+}
+
+export function createInterpolatorPolygons (from, to, fromPolygons, toPolygons) {
   const fromOuterRings = fromPolygons.map(polygon => polygon.coordinates[0])
   const toOuterRings = toPolygons.map(polygon => polygon.coordinates[0])
 
   const fromOrder = matchLinearRings(fromOuterRings, toOuterRings)
   fromPolygons = fromOrder.map(i => fromPolygons[i])
 
-  return createInterpolator(from, to, fromPolygons, toPolygons)
-}
-
-function createInterpolator (from, to, fromPolygons, toPolygons) {
   const polygonInterpolators = []
 
   for (let i = 0; i < fromPolygons.length; i++) {
