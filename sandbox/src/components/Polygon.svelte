@@ -1,5 +1,5 @@
 <script>
-import { geoPath } from 'd3-geo'
+import { geoPath, geoIdentity } from 'd3-geo'
 import { tweened } from 'svelte/motion'
 import { cubicOut } from 'svelte/easing'
 
@@ -10,7 +10,8 @@ export let fill
 export let opacity = 1
 export let transition = 2000
 
-const generatePath = geoPath()
+const projection = geoIdentity().reflectY(true).fitSize([500, 500], geometry)
+const generatePath = geoPath().projection(projection)
 
 let transitionableGeometry = tweened(geometry, {
   duration: transition,

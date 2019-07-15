@@ -7,8 +7,8 @@
 
   const geometries = {}
 
-  // for (let i = 0; i < provinces.features.length; i++) {
-  for (let i = 4; i < 7; i++) {
+  for (let i = 0; i < provinces.features.length; i++) {
+  // for (let i = 4; i < 7; i++) {
     let geometry = provinces.features[i].geometry
     let bbox = getBBox(geometry)
     let transformToFitExample = createGeoTransform(bbox, { x: [50, 450], y: [50, 450] })
