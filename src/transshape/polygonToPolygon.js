@@ -4,7 +4,7 @@ import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
 import matchLinearRings from '../matchLinearRings.js'
 import linearRingCentroid from '../utils/linearRingCentroid.js'
 
-export default function (from, to) {
+export default function polygonToPolygon (from, to) {
   const fromOuterRing = from.coordinates[0]
   const toOuterRing = to.coordinates[0]
 

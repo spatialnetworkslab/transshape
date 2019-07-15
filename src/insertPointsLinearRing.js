@@ -7,18 +7,18 @@ export default function insertPointsLinearRing (inputLinearRing, numberOfAdditio
   let linearRing = cloneLinearRing(inputLinearRing)
   linearRing = removeClosingPoint(linearRing)
 
-  let edgeLengths = getEdgeLengths(linearRing)
+  const edgeLengths = getEdgeLengths(linearRing)
   let orderedEdgeIds = getOrderDescending(edgeLengths)
 
   for (let i = 0; i < numberOfAdditionalPoints; i++) {
-    let longestEdgeId = orderedEdgeIds[0]
+    const longestEdgeId = orderedEdgeIds[0]
 
-    let edge = getEdge(linearRing, longestEdgeId)
+    const edge = getEdge(linearRing, longestEdgeId)
 
-    let edgeLength = edgeLengths[longestEdgeId]
+    const edgeLength = edgeLengths[longestEdgeId]
 
-    let newEdges = splitEdge(edge)
-    let newEdgesLength = edgeLength / 2
+    const newEdges = splitEdge(edge)
+    const newEdgesLength = edgeLength / 2
 
     // Remove old edge
     orderedEdgeIds.shift()
@@ -41,7 +41,7 @@ export default function insertPointsLinearRing (inputLinearRing, numberOfAdditio
 }
 
 export function cloneLinearRing (linearRing) {
-  let clonedLinearRing = []
+  const clonedLinearRing = []
 
   for (let i = 0; i < linearRing.length; i++) {
     clonedLinearRing.push(linearRing[i].slice(0))
@@ -51,10 +51,10 @@ export function cloneLinearRing (linearRing) {
 }
 
 function getEdgeLengths (linearRing) {
-  let edgeLengths = []
+  const edgeLengths = []
 
   for (let i = 0; i < linearRing.length; i++) {
-    let edge = getEdge(linearRing, i)
+    const edge = getEdge(linearRing, i)
 
     edgeLengths.push(pointDistance(edge[0], edge[1]))
   }
@@ -69,7 +69,7 @@ function getEdge (linearRing, index) {
 }
 
 function splitEdge (edge) {
-  let pointInBetween = interpolate(edge[0], edge[1])(0.5)
+  const pointInBetween = interpolate(edge[0], edge[1])(0.5)
 
   return [
     [edge[0], pointInBetween],
@@ -82,12 +82,12 @@ function insertOrderedId (orderedIds, edgeLengths, valueIndex, newValue) {
   let idsWereInserted = false
 
   for (let i = 0; i < orderedIds.length; i++) {
-    let index = orderedIds[i]
+    const index = orderedIds[i]
 
     // Increase all indices after the valueIndex with 1
     if (index > valueIndex) orderedIds[i] = orderedIds[i] + 1
 
-    let currentArrayValue = edgeLengths[index]
+    const currentArrayValue = edgeLengths[index]
     if (currentArrayValue === null) continue
 
     if (newValue >= currentArrayValue) {

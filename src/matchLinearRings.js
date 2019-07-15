@@ -7,7 +7,7 @@ import { pointDistance } from './utils/distance.js'
 import linearRingCentroid from './utils/linearRingCentroid.js'
 
 export default function matchLinearRings (fromRings, toRings) {
-  let distanceMatrix = fromRings.map(fromRing => toRings.map(toRing => squaredDistance(fromRing, toRing)))
+  const distanceMatrix = fromRings.map(fromRing => toRings.map(toRing => squaredDistance(fromRing, toRing)))
 
   return bestOrder(fromRings, toRings, distanceMatrix)
 }
@@ -18,8 +18,8 @@ export function bestOrder (start, end, distances) {
 
   function permute (arr, order = [], sum = 0) {
     for (let i = 0; i < arr.length; i++) {
-      let cur = arr.splice(i, 1)
-      let dist = distances[cur[0]][order.length]
+      const cur = arr.splice(i, 1)
+      const dist = distances[cur[0]][order.length]
 
       if (sum + dist < min) {
         if (arr.length) {
@@ -41,7 +41,7 @@ export function bestOrder (start, end, distances) {
 }
 
 function squaredDistance (fromRing, toRing) {
-  let d = pointDistance(
+  const d = pointDistance(
     linearRingCentroid(fromRing), linearRingCentroid(toRing)
   )
 
