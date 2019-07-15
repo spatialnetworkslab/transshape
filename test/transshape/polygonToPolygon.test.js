@@ -2,28 +2,28 @@ import { transshape } from '../../src'
 
 describe('transshape: Polygon to Polygon', () => {
   test('same number of points, no rotation, no holes', () => {
-    let from = {
+    const from = {
       type: 'Polygon',
       coordinates: [
         [[0, 0], [5, 0], [5, 5], [0, 5], [0, 0]]
       ]
     }
 
-    let to = {
+    const to = {
       type: 'Polygon',
       coordinates: [
         [[5, 5], [15, 5], [15, 15], [5, 15], [5, 5]]
       ]
     }
 
-    let expectedHalfWayPolygon = {
+    const expectedHalfWayPolygon = {
       type: 'Polygon',
       coordinates: [
         [[2.5, 2.5], [10, 2.5], [10, 10], [2.5, 10], [2.5, 2.5]]
       ]
     }
 
-    let interpolator = transshape(from, to)
+    const interpolator = transshape(from, to)
 
     expect(interpolator(0)).toEqual(from)
     expect(interpolator(0.5)).toEqual(expectedHalfWayPolygon)
@@ -31,23 +31,23 @@ describe('transshape: Polygon to Polygon', () => {
   })
 
   test('different number of points, no rotation, no holes', () => {
-    let fromSquare = {
+    const fromSquare = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [4, 1], [4, 4], [1, 4], [1, 1]]
       ]
     }
 
-    let toStar = {
+    const toStar = {
       type: 'Polygon',
       coordinates: [
         [[2, 2], [2.5, 0], [3, 2], [5, 2.5], [3, 3], [2.5, 5], [2, 3], [0, 2.5], [2, 2]]
       ]
     }
 
-    let interpolator = transshape(fromSquare, toStar)
+    const interpolator = transshape(fromSquare, toStar)
 
-    let expectedHalfWayPolygon = {
+    const expectedHalfWayPolygon = {
       type: 'Polygon',
       coordinates: [
         [
@@ -61,23 +61,23 @@ describe('transshape: Polygon to Polygon', () => {
   })
 
   test('different number of points, rotation, no holes', () => {
-    let fromSquare = {
+    const fromSquare = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [4, 1], [4, 4], [1, 4], [1, 1]]
       ]
     }
 
-    let toStar = {
+    const toStar = {
       type: 'Polygon',
       coordinates: [
         [[3, 3], [2.5, 5], [2, 3], [0, 2.5], [2, 2], [2.5, 0], [3, 2], [5, 2.5], [3, 3]]
       ]
     }
 
-    let interpolator = transshape(fromSquare, toStar)
+    const interpolator = transshape(fromSquare, toStar)
 
-    let expectedHalfWayPolygon = {
+    const expectedHalfWayPolygon = {
       type: 'Polygon',
       coordinates: [
         [
@@ -91,7 +91,7 @@ describe('transshape: Polygon to Polygon', () => {
   })
 
   test('different number of points, rotation, both 1 hole', () => {
-    let fromPolygon = {
+    const fromPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [2.5, 0], [4, 1], [4, 4], [2.5, 5], [1, 4], [1, 1]],
@@ -99,7 +99,7 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let toPolygon = {
+    const toPolygon = {
       type: 'Polygon',
       coordinates: [
         [[5, 5], [1, 5], [1, 2], [2, 2], [2, 1], [5, 1], [5, 5]],
@@ -107,9 +107,9 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let interpolator = transshape(fromPolygon, toPolygon)
+    const interpolator = transshape(fromPolygon, toPolygon)
 
-    let expectedHalfWayPolygon = {
+    const expectedHalfWayPolygon = {
       type: 'Polygon',
       coordinates: [
         [[4.5, 4.5], [1.75, 5], [1, 3], [1.5, 1.5], [2.25, 0.5], [4.5, 1], [4.5, 4.5]],
@@ -121,7 +121,7 @@ describe('transshape: Polygon to Polygon', () => {
   })
 
   test('same number of points, no rotation, both 2 holes (hole matching)', () => {
-    let fromPolygon = {
+    const fromPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
@@ -130,7 +130,7 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let toPolygon = {
+    const toPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 4], [1, 4], [1, 1]],
@@ -139,9 +139,9 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let interpolator = transshape(fromPolygon, toPolygon)
+    const interpolator = transshape(fromPolygon, toPolygon)
 
-    let expectedHalfWayPolygon = {
+    const expectedHalfWayPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 4.5], [1, 4.5], [1, 1]],
@@ -154,7 +154,7 @@ describe('transshape: Polygon to Polygon', () => {
   })
 
   test('same number of points, no rotation, different number of holes (imploding)', () => {
-    let fromPolygon = {
+    const fromPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
@@ -163,7 +163,7 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let toPolygon = {
+    const toPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
@@ -171,9 +171,9 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let interpolator = transshape(fromPolygon, toPolygon)
+    const interpolator = transshape(fromPolygon, toPolygon)
 
-    let expectedHalfWayPolygon = {
+    const expectedHalfWayPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
@@ -182,13 +182,13 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let roundedOutput = roundValuesPolygon(interpolator(0.5))
+    const roundedOutput = roundValuesPolygon(interpolator(0.5))
 
     expect(roundedOutput).toEqual(expectedHalfWayPolygon)
   })
 
   test('same number of points, no rotation, different number of holes (exploding)', () => {
-    let fromPolygon = {
+    const fromPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
@@ -196,7 +196,7 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let toPolygon = {
+    const toPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
@@ -205,9 +205,9 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let interpolator = transshape(fromPolygon, toPolygon)
+    const interpolator = transshape(fromPolygon, toPolygon)
 
-    let expectedHalfWayPolygon = {
+    const expectedHalfWayPolygon = {
       type: 'Polygon',
       coordinates: [
         [[1, 1], [5, 1], [5, 5], [1, 5], [1, 1]],
@@ -216,20 +216,20 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    let roundedOutput = roundValuesPolygon(interpolator(0.5))
+    const roundedOutput = roundValuesPolygon(interpolator(0.5))
 
     expect(roundedOutput).toEqual(expectedHalfWayPolygon)
   })
 })
 
 function round (value, decimals = 2) {
-  let multiplier = 10 ** decimals
+  const multiplier = 10 ** decimals
 
   return Math.round(value * multiplier) / multiplier
 }
 
 function roundValuesPolygon (polygon, decimals = 2) {
-  let roundedCoordinates = polygon.coordinates.map(linearRing => {
+  const roundedCoordinates = polygon.coordinates.map(linearRing => {
     return linearRing.map(point => {
       return point.map(value => round(value, decimals))
     })
