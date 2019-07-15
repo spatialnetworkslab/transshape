@@ -6,13 +6,13 @@
 
 <div class="grid-container">
 
-  <div class="grid-item">
+  <!-- <div class="grid-item">
     <PolygonToPolygonNoHoles />
   </div>
 
   <div class="grid-item">
     <PolygonToPolygonHoles />
-  </div>
+  </div> -->
 
   <div class="grid-item">
     <Provinces />
