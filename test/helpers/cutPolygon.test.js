@@ -1,6 +1,16 @@
 import { cutPolygon } from '../../src'
 
 describe('cutPolygon', () => {
+  test('throws if the number of desired pieces is less than 2', () => {
+    const inputPolygonGeometry = {
+      type: 'Polygon', coordinates: [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]]
+    }
+
+    expect(() => cutPolygon(inputPolygonGeometry, 1)).toThrow()
+    expect(() => cutPolygon(inputPolygonGeometry, 0)).toThrow()
+    expect(() => cutPolygon(inputPolygonGeometry, -1)).toThrow()
+  })
+
   test('cuts up a square polygon into 2 pieces as expected', () => {
     const inputPolygonGeometry = {
       type: 'Polygon', coordinates: [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]]

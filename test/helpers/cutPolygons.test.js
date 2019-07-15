@@ -1,6 +1,15 @@
 import { cutPolygons } from '../../src/'
 
 describe('cutPolygons', () => {
+  test('throws if the number of additional polygons is less than 1', () => {
+    const geometries = [
+      { type: 'Polygon', coordinates: [[[0, 0], [5, 0], [5, 5], [0, 5], [0, 0]]] }
+    ]
+
+    expect(() => cutPolygons(geometries, 0)).toThrow()
+    expect(() => cutPolygons(geometries, -1)).toThrow()
+  })
+
   test('cuts up 3 polygons into 5 polygons as expected', () => {
     const geometries = [
       { type: 'Polygon', coordinates: [[[0, 0], [5, 0], [5, 5], [0, 5], [0, 0]]] },
