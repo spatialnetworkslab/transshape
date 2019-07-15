@@ -3,7 +3,7 @@ import { geoPath } from 'd3-geo'
 import { tweened } from 'svelte/motion'
 import { cubicOut } from 'svelte/easing'
 
-import { transshape } from '../../src/'
+import { transshape } from '../../../src/'
 
 export let geometry
 export let fill
