@@ -8,7 +8,7 @@ export default function cutPolygons (polygons, numberOfDesiredAdditionalPolygons
   const polygonAreas = map(polygons, polygonArea)
   const numberOfCutsPerPolygon = assignCuts(polygonAreas, numberOfDesiredAdditionalPolygons)
 
-  const resultingPolygons = []
+  let resultingPolygons = []
 
   for (let i = 0; i < polygons.length; i++) {
     const polygon = polygons[i]
@@ -20,7 +20,7 @@ export default function cutPolygons (polygons, numberOfDesiredAdditionalPolygons
 
     if (numberOfCuts > 0) {
       const numberOfDesiredPolygons = numberOfCuts + 1
-      resultingPolygons.concat(cutPolygon(polygon, numberOfDesiredPolygons))
+      resultingPolygons = resultingPolygons.concat(cutPolygon(polygon, numberOfDesiredPolygons))
     }
   }
 
