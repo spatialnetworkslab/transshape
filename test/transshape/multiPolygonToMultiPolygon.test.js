@@ -6,7 +6,7 @@ describe('transshape: MultiPolygon to MultiPolygon', () => {
       type: 'MultiPolygon',
       coordinates: [
         [
-          [[5, 2], [5, 5], [2, 5], [2, 2], [5, 2]]
+          [[5, 2], [5, 5], [1, 5], [2, 2], [5, 2]]
         ],
         [
           [[7, 6], [8, 6], [8, 7], [7, 7], [7, 6]]
@@ -18,7 +18,7 @@ describe('transshape: MultiPolygon to MultiPolygon', () => {
       type: 'MultiPolygon',
       coordinates: [
         [
-          [[1, 4], [3, 4], [3, 6], [1, 6], [1, 4]]
+          [[1, 4], [3, 4], [3, 6], [0, 7], [1, 4]]
         ],
         [
           [[4, 1], [6, 1], [6, 3], [4, 3], [4, 1]]
@@ -33,7 +33,7 @@ describe('transshape: MultiPolygon to MultiPolygon', () => {
       type: 'MultiPolygon',
       coordinates: [
         [
-          [[1.5, 3], [3.25, 3.75], [4, 5.5], [1.5, 5.5], [1.5, 3]]
+          [[1.5, 3], [3.25, 3.75], [4, 5.5], [0.5, 6], [1.5, 3]]
         ],
         [
           [[3, 1.5], [5.5, 1.5], [5.5, 4], [3.75, 3.25], [3, 1.5]]

@@ -15,11 +15,24 @@ const generatePath = geoPath()
 let transitionableGeometry = tweened(geometry, {
   duration: transition,
   easing: cubicOut,
-  interpolate: transshape
+  interpolate: () => getInterpolator()
 })
 
+function getInterpolator () {
+  return interpolator
+}
+
+let previousGeometry = geometry
+let interpolator
+
+function createInterpolator () {
+  interpolator = transshape(previousGeometry, geometry)
+}
+
 $: {
+  createInterpolator()
   transitionableGeometry.set(geometry)
+  previousGeometry = geometry
 }
 </script>
 
