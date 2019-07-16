@@ -5,7 +5,7 @@
 
 import { pointDistance } from './utils/distance.js'
 import linearRingCentroid from './utils/linearRingCentroid.js'
-import { map } from '../utils/array.js'
+import { map } from './utils/array.js'
 
 export default function matchLinearRings (fromRings, toRings) {
   const distanceMatrix = map(fromRings, fromRing => map(toRings, toRing => squaredDistance(fromRing, toRing)))
