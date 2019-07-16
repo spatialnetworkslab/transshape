@@ -4,6 +4,7 @@
 */
 
 import polygonArea from '../utils/polygonArea.js'
+import { map } from '../utils/array.js'
 
 export default function createTopology (vertices, triangleIndices) {
   const arcIndices = {}
@@ -17,7 +18,7 @@ export default function createTopology (vertices, triangleIndices) {
     triangleIndexArcs.forEach(arc => {
       const slug = createArcSlug(arc)
 
-      const coordinates = arc.map(pointIndex => getPoint(vertices, pointIndex))
+      const coordinates = map(arc, pointIndex => getPoint(vertices, pointIndex))
 
       if (slug in arcIndices) {
         geometry.push(~arcIndices[slug]) // Not sure what this is doing
@@ -79,6 +80,6 @@ function createTopoPolygon (area, geometry) {
 
 function getTriangleArea (vertices, triangleIndexArcs) {
   return Math.abs(
-    polygonArea(triangleIndexArcs.map(arc => getPoint(vertices, arc[0])))
+    polygonArea(map(triangleIndexArcs, arc => getPoint(vertices, arc[0])))
   )
 }

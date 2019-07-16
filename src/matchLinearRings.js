@@ -5,16 +5,17 @@
 
 import { pointDistance } from './utils/distance.js'
 import linearRingCentroid from './utils/linearRingCentroid.js'
+import { map } from '../utils/array.js'
 
 export default function matchLinearRings (fromRings, toRings) {
-  const distanceMatrix = fromRings.map(fromRing => toRings.map(toRing => squaredDistance(fromRing, toRing)))
+  const distanceMatrix = map(fromRings, fromRing => map(toRings, toRing => squaredDistance(fromRing, toRing)))
 
   return bestOrder(fromRings, toRings, distanceMatrix)
 }
 
 export function bestOrder (start, end, distances) {
   let min = Infinity
-  let best = start.map((d, i) => i)
+  let best = map(start, (_, i) => i)
 
   function permute (arr, order = [], sum = 0) {
     for (let i = 0; i < arr.length; i++) {

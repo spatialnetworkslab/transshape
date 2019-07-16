@@ -2,6 +2,7 @@ import cutPolygons from '../cutPolygon/cutPolygons.js'
 import matchLinearRings from '../matchLinearRings.js'
 import polygonToPolygon from './polygonToPolygon.js'
 import { combineIntoMultiPolygon, splitMultiPolygon } from '../utils/convertMultiPolygon.js'
+import { map } from '../utils/array.js'
 
 export default function multiPolygonToMultiPolygon (from, to) {
   let fromPolygons = splitMultiPolygon(from)
@@ -21,11 +22,11 @@ export default function multiPolygonToMultiPolygon (from, to) {
 }
 
 export function createInterpolatorPolygons (from, to, fromPolygons, toPolygons) {
-  const fromOuterRings = fromPolygons.map(polygon => polygon.coordinates[0])
-  const toOuterRings = toPolygons.map(polygon => polygon.coordinates[0])
+  const fromOuterRings = map(fromPolygons, polygon => polygon.coordinates[0])
+  const toOuterRings = map(toPolygons, polygon => polygon.coordinates[0])
 
   const fromOrder = matchLinearRings(fromOuterRings, toOuterRings)
-  fromPolygons = fromOrder.map(i => fromPolygons[i])
+  fromPolygons = map(fromOrder, i => fromPolygons[i])
 
   const polygonInterpolators = []
 
@@ -41,7 +42,7 @@ export function createInterpolatorPolygons (from, to, fromPolygons, toPolygons) 
     if (t === 1) return to
 
     return combineIntoMultiPolygon(
-      polygonInterpolators.map(polygonInterpolator => polygonInterpolator(t))
+      map(polygonInterpolators, polygonInterpolator => polygonInterpolator(t))
     )
   }
 }

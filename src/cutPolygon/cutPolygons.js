@@ -1,10 +1,11 @@
 import cutPolygon from './cutPolygon.js'
 import polygonArea from '../utils/polygonArea.js'
+import { map } from '../utils/array.js'
 
 export default function cutPolygons (polygons, numberOfDesiredAdditionalPolygons) {
   if (numberOfDesiredAdditionalPolygons < 1) throw wrongNumberOfPolygonsError
 
-  const polygonAreas = polygons.map(polygonArea)
+  const polygonAreas = map(polygons, polygonArea)
   const numberOfCutsPerPolygon = assignCuts(polygonAreas, numberOfDesiredAdditionalPolygons)
 
   const resultingPolygons = []
@@ -19,7 +20,7 @@ export default function cutPolygons (polygons, numberOfDesiredAdditionalPolygons
 
     if (numberOfCuts > 0) {
       const numberOfDesiredPolygons = numberOfCuts + 1
-      resultingPolygons.push(...cutPolygon(polygon, numberOfDesiredPolygons))
+      resultingPolygons.concat(cutPolygon(polygon, numberOfDesiredPolygons))
     }
   }
 

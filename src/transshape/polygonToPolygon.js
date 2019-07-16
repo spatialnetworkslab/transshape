@@ -3,6 +3,7 @@ import insertPointsLinearRing from '../insertPointsLinearRing.js'
 import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
 import matchLinearRings from '../matchLinearRings.js'
 import linearRingCentroid from '../utils/linearRingCentroid.js'
+import { map } from '../utils/array.js'
 
 export default function polygonToPolygon (from, to) {
   const fromOuterRing = from.coordinates[0]
@@ -68,22 +69,28 @@ function getHoles (polygon, numberOfHoles) {
 }
 
 function createHoleInterpolators (from, to) {
-  const holeInterpolators = []
+  let holeInterpolators = []
 
   const numberOfMatchableHoles = Math.min(from.coordinates.length, to.coordinates.length) - 1
 
   if (numberOfMatchableHoles > 0) {
-    holeInterpolators.push(...createMatchableHoleInterpolators(from, to, numberOfMatchableHoles))
+    holeInterpolators = holeInterpolators.concat(
+      createMatchableHoleInterpolators(from, to, numberOfMatchableHoles)
+    )
   }
 
   const differenceBetweenNumberOfHoles = from.coordinates.length - to.coordinates.length
 
   if (differenceBetweenNumberOfHoles > 0) {
-    holeInterpolators.push(...createHoleImploders(from, differenceBetweenNumberOfHoles))
+    holeInterpolators = holeInterpolators.concat(
+      createHoleImploders(from, differenceBetweenNumberOfHoles)
+    )
   }
 
   if (differenceBetweenNumberOfHoles < 0) {
-    holeInterpolators.push(...createHoleExploders(to, -differenceBetweenNumberOfHoles))
+    holeInterpolators = holeInterpolators.concat(
+      createHoleExploders(to, -differenceBetweenNumberOfHoles)
+    )
   }
 
   return holeInterpolators
@@ -96,7 +103,7 @@ function createMatchableHoleInterpolators (from, to, numberOfMatchableHoles) {
   const toHoles = getHoles(to, numberOfMatchableHoles)
 
   const fromOrder = matchLinearRings(fromHoles, toHoles)
-  const fromHolesSorted = fromOrder.map(i => fromHoles[i])
+  const fromHolesSorted = map(fromOrder, i => fromHoles[i])
 
   for (let i = 0; i < numberOfMatchableHoles; i++) {
     const fromHole = fromHolesSorted[i]
@@ -131,7 +138,7 @@ function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
 }
 
 function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
-  return createHoleImploders(polygon, differenceBetweenNumberOfHoles).map(holeInterpolator => {
+  return map(createHoleImploders(polygon, differenceBetweenNumberOfHoles), holeInterpolator => {
     return t => holeInterpolator(1 - t)
   })
 }
@@ -162,7 +169,7 @@ function createInterpolatorWithHoles (
       type: 'Polygon',
       coordinates: [
         interpolatedLinearRing,
-        ...holeInterpolators.map(holeInterpolator => holeInterpolator(t))
+        ...map(holeInterpolators, holeInterpolator => holeInterpolator(t))
       ]
     }
   }

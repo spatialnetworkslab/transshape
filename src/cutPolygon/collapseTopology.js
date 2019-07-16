@@ -5,6 +5,7 @@
 
 import { neighbors, mergeArcs, feature } from 'topojson-client'
 import { bisector } from 'd3-array'
+import { map } from '../utils/array.js'
 
 const bisect = bisector(d => d.area).left
 
@@ -20,7 +21,7 @@ export default function collapseTopology (topology, numberOfPieces) {
   }
 
   const geojson = feature(topology, topology.objects.triangles)
-  const geojsonTriangleGeometries = geojson.features.map(feature => feature.geometry)
+  const geojsonTriangleGeometries = map(geojson.features, feature => feature.geometry)
 
   return geojsonTriangleGeometries
 

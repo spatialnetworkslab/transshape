@@ -1,9 +1,10 @@
 import { interpolate } from 'd3-interpolate'
 import polygonArea from '../utils/polygonArea.js'
 import { getOrderDescending, sortIntoOrder, getInsertionIndexDescending } from '../utils/sort.js'
+import { map } from '../utils/array.js'
 
 export default function (geometries, numberOfPieces) {
-  const areas = geometries.map(polygonArea)
+  const areas = map(geometries, polygonArea)
 
   const order = getOrderDescending(areas)
 
@@ -16,7 +17,7 @@ export default function (geometries, numberOfPieces) {
 
     const cutTriangles = cutTriangleInTwo(biggestTriangle)
 
-    const areaCutTriangles = cutTriangles.map(polygonArea)
+    const areaCutTriangles = map(cutTriangles, polygonArea)
 
     for (let i = 0; i < cutTriangles.length; i++) {
       const areaCutTriangle = areaCutTriangles[i]

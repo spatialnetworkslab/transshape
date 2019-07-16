@@ -1,12 +1,14 @@
+import { map } from '../utils/array.js'
+
 export function getOrderDescending (array) {
-  const indexArray = array.map((_, i) => i)
+  const indexArray = map(array, (_, i) => i)
   indexArray.sort((a, b) => array[b] - array[a])
 
   return indexArray
 }
 
 export function sortIntoOrder (array, order) {
-  return order.map(i => array[i])
+  return map(order, i => array[i])
 }
 
 export function getInsertionIndexDescending (arraySortedDescending, value) {
