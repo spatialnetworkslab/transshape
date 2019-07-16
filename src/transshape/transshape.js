@@ -29,7 +29,7 @@ function ensureValidInput (from, to) {
   )) throw new Error('Invalid input')
 }
 
-function isPolygonOrMultiPolygon (input) {
+export function isPolygonOrMultiPolygon (input) {
   return input.constructor === Object &&
     ['Polygon', 'MultiPolygon'].includes(input.type) &&
     'coordinates' in input
