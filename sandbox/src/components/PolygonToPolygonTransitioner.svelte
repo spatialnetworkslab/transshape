@@ -13,7 +13,7 @@ function nextGeometry () {
   currentIndex = (currentIndex + 1) % numberOfGeometries
 }
 
-setInterval(nextGeometry, 3000)
+setInterval(nextGeometry, 6000)
 </script>
 
 <svg width={500} height={500}>

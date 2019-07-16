@@ -1,6 +1,6 @@
 import { scaleLinear } from 'd3-scale'
 
-export default function (domains, ranges) {
+export default function (domains, ranges, flipY = true) {
   const domainX = domains.x
   const domainY = domains.y
 
@@ -20,7 +20,7 @@ export default function (domains, ranges) {
     const newRangeY = [midY - fromMidY, midY + fromMidY]
 
     scaleX = scaleLinear().domain(domainX).range(ranges.x)
-    scaleY = scaleLinear().domain(domainY).range(newRangeY)
+    scaleY = scaleLinear().domain(domainY).range(flipY ? newRangeY.reverse() : newRangeY)
   }
 
   if (scalingFactorX >= scalingFactorY) {
@@ -28,7 +28,7 @@ export default function (domains, ranges) {
     const newRangeX = [midX - fromMidX, midX + fromMidX]
 
     scaleX = scaleLinear().domain(domainX).range(newRangeX)
-    scaleY = scaleLinear().domain(domainY).range(ranges.y)
+    scaleY = scaleLinear().domain(domainY).range(flipY ? ranges.y.reverse() : ranges.y)
   }
 
   return function (point) {

@@ -31,7 +31,7 @@ function transformLinearRing (linearRing, transformFunction) {
 
   for (let i = 0; i < linearRing.length; i++) {
     const position = linearRing[i]
-    newLinearRing.push(transformFunction(position))
+    newLinearRing.push(roundPoint(transformFunction(position)))
   }
 
   return newLinearRing
@@ -49,4 +49,12 @@ function transformMultiPolygon (multiPolygon, transformFunction) {
   }
 
   return newMultiPolygon
+}
+
+function roundPoint (point, decimals = 2) {
+  const multiplier = 10 ** decimals
+  return [
+    Math.round(point[0] * multiplier) / multiplier,
+    Math.round(point[1] * multiplier) / multiplier
+  ]
 }
