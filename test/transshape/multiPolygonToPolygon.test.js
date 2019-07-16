@@ -45,7 +45,7 @@ describe('transshape: MultiPolygon to Polygon and vice versa', () => {
         [[2, 2], [6, 2], [6, 6], [3, 6], [2, 5], [2, 2]]
       ]
     }
-    
+
     const to = {
       type: 'MultiPolygon',
       coordinates: [
