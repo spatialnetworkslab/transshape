@@ -143,7 +143,7 @@ function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
   })
 }
 
-function makeSmallRectangleAroundPoint ([x, y]) {
+export function makeSmallRectangleAroundPoint ([x, y]) {
   const epsilon = 1e-6
 
   const x1 = x - epsilon
