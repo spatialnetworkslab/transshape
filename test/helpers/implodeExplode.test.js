@@ -1,5 +1,5 @@
 import { implode, explode } from '../../src'
-import { roundValuesPolygon } from '../transshape/polygonToPolygon.test.js'
+import roundGeometry from '../roundGeometry.js'
 
 describe('implode / explode', () => {
   test('implode: Polygon', () => {
@@ -18,12 +18,12 @@ describe('implode / explode', () => {
     }
 
     const interpolator = implode(polygon)
-    const roundedOutput = roundValuesPolygon(interpolator(0.5))
+    const roundedOutput = roundGeometry(interpolator(0.5))
 
     expect(roundedOutput).toEqual(halfwayPolygon)
   })
 
-  test.only('implode: MultiPolygon', () => {
+  test('implode: MultiPolygon', () => {
     const multiPolygon = {
       type: 'MultiPolygon',
       coordinates: [
@@ -40,16 +40,16 @@ describe('implode / explode', () => {
       type: 'MultiPolygon',
       coordinates: [
         [
-          [[3.5, 3.5], [4.5, 3.5], [4.5, 4.5], [3.5, 4.5], [3.5, 3.5]]
+          [[2.5, 2.5], [1.5, 2.5], [1.5, 1.5], [2.5, 1.5], [2.5, 2.5]]
         ],
         [
-          [[1.5, 1.5], [2.5, 1.5], [2.5, 2.5], [1.5, 2.5], [1.5, 1.5]]
+          [[3.5, 3.5], [4.5, 3.5], [4.5, 4.5], [3.5, 4.5], [3.5, 3.5]]
         ]
       ]
     }
 
     const interpolator = implode(multiPolygon)
-    const roundedOutput = roundValuesPolygon(interpolator(0.5))
+    const roundedOutput = roundGeometry(interpolator(0.5))
 
     expect(roundedOutput).toEqual(halfwayMultiPolygon)
   })

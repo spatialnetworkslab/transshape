@@ -41,6 +41,8 @@ export function createInterpolatorPolygons (from, to, fromPolygons, toPolygons) 
     if (t === 0) return from
     if (t === 1) return to
 
+    const interpolatedPolygons = map(polygonInterpolators, polygonInterpolator => polygonInterpolator(t))
+
     return combineIntoMultiPolygon(
       map(polygonInterpolators, polygonInterpolator => polygonInterpolator(t))
     )

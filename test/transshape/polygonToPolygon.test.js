@@ -1,4 +1,5 @@
 import { transshape } from '../../src'
+import roundGeometry from '../roundGeometry.js'
 
 describe('transshape: Polygon to Polygon', () => {
   test('same number of points, no rotation, no holes', () => {
@@ -182,7 +183,7 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    const roundedOutput = roundValuesPolygon(interpolator(0.5))
+    const roundedOutput = roundGeometry(interpolator(0.5))
 
     expect(roundedOutput).toEqual(expectedHalfWayPolygon)
   })
@@ -216,27 +217,9 @@ describe('transshape: Polygon to Polygon', () => {
       ]
     }
 
-    const roundedOutput = roundValuesPolygon(interpolator(0.5))
+    const roundedOutput = roundGeometry(interpolator(0.5))
 
     expect(roundedOutput).toEqual(expectedHalfWayPolygon)
   })
 })
 
-function round (value, decimals = 2) {
-  const multiplier = 10 ** decimals
-
-  return Math.round(value * multiplier) / multiplier
-}
-
-export function roundValuesPolygon (polygon, decimals = 2) {
-  const roundedCoordinates = polygon.coordinates.map(linearRing => {
-    return linearRing.map(point => {
-      return point.map(value => round(value, decimals))
-    })
-  })
-
-  return {
-    type: 'Polygon',
-    coordinates: roundedCoordinates
-  }
-}
