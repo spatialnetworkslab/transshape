@@ -27,10 +27,10 @@ function getSignedRingArea (ring) {
   let total = 0
 
   for (let i = 0, l = ring.length; i < l; i++) {
-    let addX = ring[i][0]
-    let addY = ring[i === ring.length - 1 ? 0 : i + 1][1]
-    let subX = ring[i === ring.length - 1 ? 0 : i + 1][0]
-    let subY = ring[i][1]
+    const addX = ring[i][0]
+    const addY = ring[i === ring.length - 1 ? 0 : i + 1][1]
+    const subX = ring[i === ring.length - 1 ? 0 : i + 1][0]
+    const subY = ring[i][1]
 
     total += (addX * addY * 0.5)
     total -= (subX * subY * 0.5)
@@ -43,7 +43,7 @@ function getPolygonArea (polygon) {
   let totalArea = getRingArea(polygon.coordinates[0])
 
   for (let i = 1; i < polygon.coordinates.length; i++) {
-    let holeArea = getRingArea(polygon.coordinates[i])
+    const holeArea = getRingArea(polygon.coordinates[i])
     totalArea -= holeArea
   }
 

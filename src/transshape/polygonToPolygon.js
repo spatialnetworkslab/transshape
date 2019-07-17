@@ -3,18 +3,19 @@ import insertPointsLinearRing from '../insertPointsLinearRing.js'
 import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
 import matchLinearRings from '../matchLinearRings.js'
 import linearRingCentroid from '../utils/linearRingCentroid.js'
+import { map } from '../utils/array.js'
 
-export default function (from, to) {
-  let fromOuterRing = from.coordinates[0]
-  let toOuterRing = to.coordinates[0]
+export default function polygonToPolygon (from, to) {
+  const fromOuterRing = from.coordinates[0]
+  const toOuterRing = to.coordinates[0]
 
-  let [fromOuterRingPrepared, toOuterRingPrepared] = prepareLinearRings(fromOuterRing, toOuterRing)
+  const [fromOuterRingPrepared, toOuterRingPrepared] = prepareLinearRings(fromOuterRing, toOuterRing)
 
   if (neitherHasHoles(from, to)) {
     return createInterpolatorNoHoles(from, to, fromOuterRingPrepared, toOuterRingPrepared)
   }
 
-  let holeInterpolators = createHoleInterpolators(from, to)
+  const holeInterpolators = createHoleInterpolators(from, to)
 
   return createInterpolatorWithHoles(
     from, to, fromOuterRingPrepared, toOuterRingPrepared, holeInterpolators
@@ -22,7 +23,7 @@ export default function (from, to) {
 }
 
 function prepareLinearRings (fromRing, toRing) {
-  let lengthDifference = fromRing.length - toRing.length
+  const lengthDifference = fromRing.length - toRing.length
 
   if (lengthDifference > 0) {
     toRing = insertPointsLinearRing(toRing, lengthDifference)
@@ -32,19 +33,19 @@ function prepareLinearRings (fromRing, toRing) {
     fromRing = insertPointsLinearRing(fromRing, -lengthDifference)
   }
 
-  let rotatedFromRing = rotatePointsLinearRing(fromRing, toRing)
+  const rotatedFromRing = rotatePointsLinearRing(fromRing, toRing)
 
   return [rotatedFromRing, toRing]
 }
 
 function createInterpolatorNoHoles (from, to, fromOuterRingPrepared, toOuterRingPrepared) {
-  let outerRingInterpolator = interpolate(fromOuterRingPrepared, toOuterRingPrepared)
+  const outerRingInterpolator = interpolate(fromOuterRingPrepared, toOuterRingPrepared)
 
   return function interpolator (t) {
     if (t === 0) return from
     if (t === 1) return to
 
-    let interpolatedLinearRing = outerRingInterpolator(t)
+    const interpolatedLinearRing = outerRingInterpolator(t)
 
     return {
       type: 'Polygon',
@@ -58,7 +59,7 @@ function neitherHasHoles (from, to) {
 }
 
 function getHoles (polygon, numberOfHoles) {
-  let holes = []
+  const holes = []
 
   for (let i = 1; i <= numberOfHoles; i++) {
     holes.push(polygon.coordinates[i])
@@ -70,41 +71,47 @@ function getHoles (polygon, numberOfHoles) {
 function createHoleInterpolators (from, to) {
   let holeInterpolators = []
 
-  let numberOfMatchableHoles = Math.min(from.coordinates.length, to.coordinates.length) - 1
+  const numberOfMatchableHoles = Math.min(from.coordinates.length, to.coordinates.length) - 1
 
   if (numberOfMatchableHoles > 0) {
-    holeInterpolators.push(...createMatchableHoleInterpolators(from, to, numberOfMatchableHoles))
+    holeInterpolators = holeInterpolators.concat(
+      createMatchableHoleInterpolators(from, to, numberOfMatchableHoles)
+    )
   }
 
-  let differenceBetweenNumberOfHoles = from.coordinates.length - to.coordinates.length
+  const differenceBetweenNumberOfHoles = from.coordinates.length - to.coordinates.length
 
   if (differenceBetweenNumberOfHoles > 0) {
-    holeInterpolators.push(...createHoleImploders(from, differenceBetweenNumberOfHoles))
+    holeInterpolators = holeInterpolators.concat(
+      createHoleImploders(from, differenceBetweenNumberOfHoles)
+    )
   }
 
   if (differenceBetweenNumberOfHoles < 0) {
-    holeInterpolators.push(...createHoleExploders(to, -differenceBetweenNumberOfHoles))
+    holeInterpolators = holeInterpolators.concat(
+      createHoleExploders(to, -differenceBetweenNumberOfHoles)
+    )
   }
 
   return holeInterpolators
 }
 
 function createMatchableHoleInterpolators (from, to, numberOfMatchableHoles) {
-  let holeInterpolators = []
+  const holeInterpolators = []
 
-  let fromHoles = getHoles(from, numberOfMatchableHoles)
-  let toHoles = getHoles(to, numberOfMatchableHoles)
+  const fromHoles = getHoles(from, numberOfMatchableHoles)
+  const toHoles = getHoles(to, numberOfMatchableHoles)
 
-  let fromOrder = matchLinearRings(fromHoles, toHoles)
-  let fromHolesSorted = fromOrder.map(i => fromHoles[i])
+  const fromOrder = matchLinearRings(fromHoles, toHoles)
+  const fromHolesSorted = map(fromOrder, i => fromHoles[i])
 
   for (let i = 0; i < numberOfMatchableHoles; i++) {
-    let fromHole = fromHolesSorted[i]
-    let toHole = toHoles[i]
+    const fromHole = fromHolesSorted[i]
+    const toHole = toHoles[i]
 
-    let [fromHolePrepared, toHolePrepared] = prepareLinearRings(fromHole, toHole)
+    const [fromHolePrepared, toHolePrepared] = prepareLinearRings(fromHole, toHole)
 
-    let holeInterpolator = interpolate(fromHolePrepared, toHolePrepared)
+    const holeInterpolator = interpolate(fromHolePrepared, toHolePrepared)
 
     holeInterpolators.push(holeInterpolator)
   }
@@ -113,16 +120,16 @@ function createMatchableHoleInterpolators (from, to, numberOfMatchableHoles) {
 }
 
 function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
-  let interpolators = []
+  const interpolators = []
 
-  let firstHoleThatNeedsImplodingIndex = polygon.coordinates.length - differenceBetweenNumberOfHoles
+  const firstHoleThatNeedsImplodingIndex = polygon.coordinates.length - differenceBetweenNumberOfHoles
 
   for (let i = firstHoleThatNeedsImplodingIndex; i < polygon.coordinates.length; i++) {
-    let hole = polygon.coordinates[i]
-    let holeCentroid = linearRingCentroid(hole)
-    let smallRectangleAroundCentroid = makeSmallRectangleAroundPoint(holeCentroid)
+    const hole = polygon.coordinates[i]
+    const holeCentroid = linearRingCentroid(hole)
+    const smallRectangleAroundCentroid = makeSmallRectangleAroundPoint(holeCentroid)
 
-    let [preparedPolygon, preparedImplodePoint] = prepareLinearRings(hole, smallRectangleAroundCentroid)
+    const [preparedPolygon, preparedImplodePoint] = prepareLinearRings(hole, smallRectangleAroundCentroid)
 
     interpolators.push(interpolate(preparedPolygon, preparedImplodePoint))
   }
@@ -131,18 +138,18 @@ function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
 }
 
 function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
-  return createHoleImploders(polygon, differenceBetweenNumberOfHoles).map(holeInterpolator => {
+  return map(createHoleImploders(polygon, differenceBetweenNumberOfHoles), holeInterpolator => {
     return t => holeInterpolator(1 - t)
   })
 }
 
 function makeSmallRectangleAroundPoint ([x, y]) {
-  let epsilon = 1e-6
+  const epsilon = 1e-6
 
-  let x1 = x - epsilon
-  let x2 = x + epsilon
-  let y1 = y - epsilon
-  let y2 = y + epsilon
+  const x1 = x - epsilon
+  const x2 = x + epsilon
+  const y1 = y - epsilon
+  const y2 = y + epsilon
 
   return [[x1, y1], [x1, y2], [x2, y2], [x2, y1], [x1, y1]]
 }
@@ -150,19 +157,19 @@ function makeSmallRectangleAroundPoint ([x, y]) {
 function createInterpolatorWithHoles (
   from, to, fromOuterRingPrepared, toOuterRingPrepared, holeInterpolators
 ) {
-  let outerRingInterpolator = interpolate(fromOuterRingPrepared, toOuterRingPrepared)
+  const outerRingInterpolator = interpolate(fromOuterRingPrepared, toOuterRingPrepared)
 
   return function interpolator (t) {
     if (t === 0) return from
     if (t === 1) return to
 
-    let interpolatedLinearRing = outerRingInterpolator(t)
+    const interpolatedLinearRing = outerRingInterpolator(t)
 
     return {
       type: 'Polygon',
       coordinates: [
         interpolatedLinearRing,
-        ...holeInterpolators.map(holeInterpolator => holeInterpolator(t))
+        ...map(holeInterpolators, holeInterpolator => holeInterpolator(t))
       ]
     }
   }

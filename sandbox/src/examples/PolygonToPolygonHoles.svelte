@@ -1,6 +1,6 @@
 <script>
-  import generateCircle from '../generateCircle.js'
-  import PolygonToPolygonTransitioner from '../PolygonToPolygonTransitioner.svelte'
+  import generateCircle from '../utils/generateCircle.js'
+  import PolygonToPolygonTransitioner from '../components/PolygonToPolygonTransitioner.svelte'
 
   let circleWithHoles = {
     type: 'Polygon',

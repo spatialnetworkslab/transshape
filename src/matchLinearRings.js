@@ -1,49 +1,41 @@
-/*
-  Taken from flubber:
-  https://github.com/veltman/flubber
-*/
-
-import { pointDistance } from './utils/distance.js'
-import linearRingCentroid from './utils/linearRingCentroid.js'
+import polygonArea from './utils/polygonArea.js'
+import { map } from './utils/array.js'
+import { getOrderDescending } from './utils/sort.js'
 
 export default function matchLinearRings (fromRings, toRings) {
-  let distanceMatrix = fromRings.map(fromRing => toRings.map(toRing => squaredDistance(fromRing, toRing)))
-
-  return bestOrder(fromRings, toRings, distanceMatrix)
-}
-
-export function bestOrder (start, end, distances) {
-  let min = Infinity
-  let best = start.map((d, i) => i)
-
-  function permute (arr, order = [], sum = 0) {
-    for (let i = 0; i < arr.length; i++) {
-      let cur = arr.splice(i, 1)
-      let dist = distances[cur[0]][order.length]
-
-      if (sum + dist < min) {
-        if (arr.length) {
-          permute(arr.slice(), order.concat(cur), sum + dist)
-        } else {
-          min = sum + dist
-          best = order.concat(cur)
-        }
-      }
-      if (arr.length) {
-        arr.splice(i, 0, cur[0])
-      }
-    }
+  if (tooManyRings(fromRings)) {
+    return map(fromRings, (_, i) => i)
   }
 
-  permute(best)
-
-  return best
+  return bestOrder(fromRings, toRings)
 }
 
-function squaredDistance (fromRing, toRing) {
-  let d = pointDistance(
-    linearRingCentroid(fromRing), linearRingCentroid(toRing)
-  )
+function tooManyRings (rings) {
+  // with more than 9 rings, everything will be too chaotic to notice this stuff anyway.
+  return rings.length > 9
+}
 
-  return d * d
+export function bestOrder (fromRings, toRings) {
+  const fromAreas = map(fromRings, polygonArea)
+  const toAreas = map(toRings, polygonArea)
+
+  const fromAreasOrderDescending = getOrderDescending(fromAreas)
+  const toAreasOrderDescending = getOrderDescending(toAreas)
+
+  const pairs = {}
+
+  for (let i = 0; i < toAreasOrderDescending.length; i++) {
+    const fromIndex = fromAreasOrderDescending[i]
+    const toIndex = toAreasOrderDescending[i]
+
+    pairs[toIndex] = fromIndex
+  }
+
+  const fromOrder = []
+
+  for (let i = 0; i < toRings.length; i++) {
+    fromOrder.push(pairs[i])
+  }
+
+  return fromOrder
 }

@@ -4,6 +4,7 @@
 */
 
 import polygonArea from '../utils/polygonArea.js'
+import { map } from '../utils/array.js'
 
 export default function createTopology (vertices, triangleIndices) {
   const arcIndices = {}
@@ -12,12 +13,12 @@ export default function createTopology (vertices, triangleIndices) {
   for (let i = 0; i < triangleIndices.length; i += 3) {
     const geometry = []
 
-    let triangleIndexArcs = createTriangleIndexArcs(triangleIndices, i)
+    const triangleIndexArcs = createTriangleIndexArcs(triangleIndices, i)
 
     triangleIndexArcs.forEach(arc => {
       const slug = createArcSlug(arc)
 
-      const coordinates = arc.map(pointIndex => getPoint(vertices, pointIndex))
+      const coordinates = map(arc, pointIndex => getPoint(vertices, pointIndex))
 
       if (slug in arcIndices) {
         geometry.push(~arcIndices[slug]) // Not sure what this is doing
@@ -27,8 +28,8 @@ export default function createTopology (vertices, triangleIndices) {
       }
     })
 
-    let area = getTriangleArea(vertices, triangleIndexArcs)
-    let polygon = createTopoPolygon(area, geometry)
+    const area = getTriangleArea(vertices, triangleIndexArcs)
+    const polygon = createTopoPolygon(area, geometry)
 
     topology.objects.triangles.geometries.push(polygon)
   }
@@ -54,9 +55,9 @@ function createEmptyTopology () {
 }
 
 export function createTriangleIndexArcs (triangleIndices, i) {
-  let a = triangleIndices[i]
-  let b = triangleIndices[i + 1]
-  let c = triangleIndices[i + 2]
+  const a = triangleIndices[i]
+  const b = triangleIndices[i + 1]
+  const c = triangleIndices[i + 2]
 
   return [[a, b], [b, c], [c, a]]
 }
@@ -79,6 +80,6 @@ function createTopoPolygon (area, geometry) {
 
 function getTriangleArea (vertices, triangleIndexArcs) {
   return Math.abs(
-    polygonArea(triangleIndexArcs.map(arc => getPoint(vertices, arc[0])))
+    polygonArea(map(triangleIndexArcs, arc => getPoint(vertices, arc[0])))
   )
 }

@@ -11,7 +11,7 @@ export default function rotatePointsLinearRing (inputLinearRing, toLinearRing) {
   let fromLinearRing = cloneLinearRing(inputLinearRing)
   fromLinearRing = removeClosingPoint(fromLinearRing)
 
-  let fromLength = fromLinearRing.length
+  const fromLength = fromLinearRing.length
   let min = Infinity
   let bestOffset
   let sumOfSquares
@@ -21,7 +21,7 @@ export default function rotatePointsLinearRing (inputLinearRing, toLinearRing) {
     sumOfSquares = 0
 
     toLinearRing.forEach((point, i) => {
-      let distance = pointDistance(fromLinearRing[(offset + i) % fromLength], point)
+      const distance = pointDistance(fromLinearRing[(offset + i) % fromLength], point)
       sumOfSquares += distance * distance
     })
 

@@ -1,6 +1,7 @@
 <script>
   import PolygonToPolygonNoHoles from './examples/PolygonToPolygonNoHoles.svelte'
   import PolygonToPolygonHoles from './examples/PolygonToPolygonHoles.svelte'
+  import Provinces from './examples/Provinces.svelte'
 </script>
 
 <div class="grid-container">
@@ -11,6 +12,10 @@
 
   <div class="grid-item">
     <PolygonToPolygonHoles />
+  </div>
+
+  <div class="grid-item">
+    <Provinces />
   </div>
 
 </div>

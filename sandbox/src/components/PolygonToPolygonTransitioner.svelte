@@ -5,12 +5,15 @@ export let geometries
 
 let geometryNames = Object.keys(geometries)
 
-let currentGeometry = geometryNames[0]
+let currentIndex = 0
+let numberOfGeometries = geometryNames.length
+$: currentGeometry = geometryNames[currentIndex]
 
-setInterval(() => {
-  let newValue = currentGeometry === geometryNames[0] ? geometryNames[1] : geometryNames[0]
-  currentGeometry = newValue
-}, 3000)
+function nextGeometry () {
+  currentIndex = (currentIndex + 1) % numberOfGeometries
+}
+
+setInterval(nextGeometry, 3000)
 </script>
 
 <svg width={500} height={500}>

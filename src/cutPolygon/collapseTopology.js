@@ -3,10 +3,29 @@
   https://github.com/veltman/flubber
 */
 
-import { neighbors, mergeArcs, feature } from 'topojson-client'
+import { mergeArcs, feature } from 'topojson-client'
 import { bisector } from 'd3-array'
+import { map } from '../utils/array.js'
 
 const bisect = bisector(d => d.area).left
+
+function findNeighbor (geoms) {
+  // we assume the first geom is the candidate for which
+  // we want to find a neighbor
+  const sourceArcs = geoms[0].arcs[0].map(arc => arc < 0 ? ~arc : arc)
+
+  let neighbor
+
+  // start loop at index 1, first possible neighbor
+  for (let index = 1; index < geoms.length; index++) {
+    const targetArcs = geoms[index].arcs[0].map(arc => arc < 0 ? ~arc : arc)
+    if (sourceArcs.some(arc => targetArcs.includes(arc))) {
+      neighbor = index
+      break
+    }
+  }
+  return neighbor
+}
 
 export default function collapseTopology (topology, numberOfPieces) {
   const triangleGeometries = topology.objects.triangles.geometries
@@ -19,14 +38,14 @@ export default function collapseTopology (topology, numberOfPieces) {
     throw new RangeError('Can\'t collapse topology into ' + numberOfPieces + ' pieces.')
   }
 
-  let geojson = feature(topology, topology.objects.triangles)
-  let geojsonTriangleGeometries = geojson.features.map(feature => feature.geometry)
+  const geojson = feature(topology, topology.objects.triangles)
+  const geojsonTriangleGeometries = map(geojson.features, feature => feature.geometry)
 
   return geojsonTriangleGeometries
 
   function mergeSmallestFeature () {
     const smallest = triangleGeometries[0]
-    const neighborIndex = neighbors(triangleGeometries)[0][0]
+    const neighborIndex = findNeighbor(triangleGeometries)
     const neighbor = triangleGeometries[neighborIndex]
     const merged = mergeArcs(topology, [smallest, neighbor])
 

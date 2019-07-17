@@ -9,8 +9,8 @@ export function linearRingLength (linearRing) {
   let totalLength = 0
 
   for (let i = 0; i < linearRing.length - 1; i++) {
-    let from = linearRing[i]
-    let to = linearRing[i + 1]
+    const from = linearRing[i]
+    const to = linearRing[i + 1]
 
     totalLength += pointDistance(from, to)
   }
