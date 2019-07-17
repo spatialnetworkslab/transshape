@@ -3,7 +3,7 @@ import { isPolygonOrMultiPolygon } from './transshape/transshape.js'
 export function implode (geometry) {
   ensureValidInput(geometry)
 
-  const centroid
+  // const centroid
 }
 
 export function explode (geometry) {
