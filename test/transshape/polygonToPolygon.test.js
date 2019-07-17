@@ -228,7 +228,7 @@ function round (value, decimals = 2) {
   return Math.round(value * multiplier) / multiplier
 }
 
-function roundValuesPolygon (polygon, decimals = 2) {
+export function roundValuesPolygon (polygon, decimals = 2) {
   const roundedCoordinates = polygon.coordinates.map(linearRing => {
     return linearRing.map(point => {
       return point.map(value => round(value, decimals))

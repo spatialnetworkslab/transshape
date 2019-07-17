@@ -54,11 +54,11 @@ function calculateMultiPolygonCentroid (multiPolygon) {
 
   for (let i = 0; i < multiPolygon.coordinates.length; i++) {
     const polygon = multiPolygon.coordinates[i]
-    const polygonCentroid = calculatePolygonCentroid(polygon)
+    const polygonCentroid = calculateLinearRingCentroid(polygon[0])
     const area = polygonArea(polygon[0])
 
-    x += polygonCentroid[0]
-    y += polygonCentroid[1]
+    x += polygonCentroid[0] * area
+    y += polygonCentroid[1] * area
     totalArea += area
   }
 
