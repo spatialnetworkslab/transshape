@@ -53,6 +53,8 @@ function constructInterpolatorObject (fromLayer, toLayer, keyOverlap) {
       interpolatorObject[key] = explode(toLayer[key])
     }
   }
+
+  return interpolatorObject
 }
 
 function createLayerInterpolator (fromLayer, toLayer, interpolatorObject) {
