@@ -1,11 +1,15 @@
-import transshape, { isPolygonOrMultiPolygon } from './transshape.js'
+import transshape from './transshape.js'
+import { implode, explode } from '../implodeExplode.js'
 import { every } from '../utils/array.js'
+import { isPolygonOrMultiPolygon } from '../utils/geometryDetectors.js'
 
 export default function transshapeLayer (fromLayer, toLayer) {
   ensureValidInput(fromLayer, toLayer)
 
   const keyOverlap = getKeyOverlap(fromLayer, toLayer)
   const interpolatorObject = constructInterpolatorObject(fromLayer, toLayer, keyOverlap)
+
+  return createLayerInterpolator(fromLayer, toLayer, interpolatorObject)
 }
 
 function ensureValidInput (fromLayer, toLayer) {
@@ -34,15 +38,34 @@ function getKeyOverlap (fromLayer, toLayer) {
 function constructInterpolatorObject (fromLayer, toLayer, keyOverlap) {
   const interpolatorObject = {}
 
-  for (let key in keyOverlap) {
-    let overlap = keyOverlap[key]
+  for (const key in keyOverlap) {
+    const overlap = keyOverlap[key]
 
     if (overlap === 'both') {
-
+      interpolatorObject[key] = transshape(fromLayer[key], toLayer[key])
     }
 
-    if (overlap === 'from') {}
+    if (overlap === 'from') {
+      interpolatorObject[key] = implode(fromLayer[key])
+    }
 
-    if (overlap === 'to') {}
+    if (overlap === 'to') {
+      interpolatorObject[key] = explode(toLayer[key])
+    }
+  }
+}
+
+function createLayerInterpolator (fromLayer, toLayer, interpolatorObject) {
+  return function interpolator (t) {
+    if (t === 0) return fromLayer
+    if (t === 1) return toLayer
+
+    const layerObject = {}
+
+    for (const key in interpolatorObject) {
+      layerObject[key] = interpolatorObject[key](t)
+    }
+
+    return layerObject
   }
 }

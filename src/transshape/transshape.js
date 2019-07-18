@@ -1,7 +1,7 @@
 import polygonToPolygon from './polygonToPolygon.js'
 import { multiPolygonToPolygon, polygonToMultiPolygon } from './multiPolygonToPolygon.js'
 import multiPolygonToMultiPolygon from './multiPolygonToMultiPolygon.js'
-import { isPolygon, isMultiPolygon } from '../utils/geometryDetectors.js'
+import { isPolygonOrMultiPolygon } from '../utils/geometryDetectors.js'
 
 export default function transshape (from, to) {
   ensureValidInput(from, to)
@@ -30,8 +30,4 @@ function ensureValidInput (from, to) {
   )) {
     throw new Error('Invalid input')
   }
-}
-
-export function isPolygonOrMultiPolygon (input) {
-  return isPolygon(input) || isMultiPolygon(input)
 }

@@ -9,3 +9,7 @@ export function isPolygon (polygon) {
 export function isMultiPolygon (polygon) {
   return polygon.constructor === Object && polygon.type === 'MultiPolygon'
 }
+
+export function isPolygonOrMultiPolygon (input) {
+  return isPolygon(input) || isMultiPolygon(input)
+}

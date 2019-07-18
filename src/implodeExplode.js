@@ -1,6 +1,7 @@
-import transshape, { isPolygonOrMultiPolygon } from './transshape/transshape.js'
+import transshape from './transshape/transshape.js'
 import calculateCentroid from './utils/calculateCentroid.js'
 import { makeSmallRectangleAroundPoint } from './transshape/polygonToPolygon.js'
+import { isPolygonOrMultiPolygon } from './utils/geometryDetectors.js'
 
 export function implode (geometry) {
   ensureValidInput(geometry)
