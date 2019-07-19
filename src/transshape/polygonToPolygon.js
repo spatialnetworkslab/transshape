@@ -2,7 +2,7 @@ import { interpolate } from 'd3-interpolate'
 import insertPointsLinearRing from '../insertPointsLinearRing.js'
 import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
 import matchLinearRings from '../matchLinearRings.js'
-import linearRingCentroid from '../utils/linearRingCentroid.js'
+import calculateCentroid from '../utils/calculateCentroid.js'
 import { map } from '../utils/array.js'
 
 export default function polygonToPolygon (from, to) {
@@ -126,7 +126,7 @@ function createHoleImploders (polygon, differenceBetweenNumberOfHoles) {
 
   for (let i = firstHoleThatNeedsImplodingIndex; i < polygon.coordinates.length; i++) {
     const hole = polygon.coordinates[i]
-    const holeCentroid = linearRingCentroid(hole)
+    const holeCentroid = calculateCentroid(hole)
     const smallRectangleAroundCentroid = makeSmallRectangleAroundPoint(holeCentroid)
 
     const [preparedPolygon, preparedImplodePoint] = prepareLinearRings(hole, smallRectangleAroundCentroid)
@@ -143,7 +143,7 @@ function createHoleExploders (polygon, differenceBetweenNumberOfHoles) {
   })
 }
 
-function makeSmallRectangleAroundPoint ([x, y]) {
+export function makeSmallRectangleAroundPoint ([x, y]) {
   const epsilon = 1e-6
 
   const x1 = x - epsilon

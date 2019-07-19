@@ -1,3 +1,5 @@
+import { isLinearRing, isPolygon, isMultiPolygon } from './geometryDetectors.js'
+
 export default function polygonArea (polygon) {
   if (isLinearRing(polygon)) {
     return getRingArea(polygon)
@@ -58,16 +60,4 @@ function getMultiPolygonArea (multiPolygon) {
   }
 
   return totalArea
-}
-
-function isLinearRing (polygon) {
-  return polygon.constructor === Array
-}
-
-function isPolygon (polygon) {
-  return polygon.constructor === Object && polygon.type === 'Polygon'
-}
-
-function isMultiPolygon (polygon) {
-  return polygon.constructor === Object && polygon.type === 'MultiPolygon'
 }
