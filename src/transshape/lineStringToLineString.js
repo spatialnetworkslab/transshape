@@ -1,30 +1,33 @@
-import { insertPoints } from '../insertPoints.js'
+import { insertPointsLineString } from '../insertPoints.js'
 import { interpolate } from 'd3-interpolate'
 
 export default function (from, to) {
-  const lengthDifference = from.length - to.length
+  const lengthDifference = from.coordinates.length - to.coordinates.length
 
-  let preparedFrom = from
-  let preparedTo = to
+  let preparedFromCoordinates = from.coordinates
+  let preparedToCoordinates = to.coordinates
 
   if (lengthDifference > 0) {
-    preparedTo = insertPoints(to, lengthDifference)
+    preparedToCoordinates = insertPointsLineString(to.coordinates, lengthDifference)
   }
 
   if (lengthDifference < 0) {
-    preparedFrom = insertPoints(from, lengthDifference)
+    preparedFromCoordinates = insertPointsLineString(from.coordinates, -lengthDifference)
   }
 
-  return createInterpolator(from, to, preparedFrom, preparedTo)
+  return createInterpolator(from, to, preparedFromCoordinates, preparedToCoordinates)
 }
 
-function createInterpolator (from, to, preparedFrom, preparedTo) {
-  const lineStringInterpolator = interpolate(preparedFrom, preparedTo)
+function createInterpolator (from, to, preparedFromCoordinates, preparedToCoordinates) {
+  const coordinateInterpolator = interpolate(preparedFromCoordinates, preparedToCoordinates)
 
   return function interpolator (t) {
     if (t === 0) return from
     if (t === 1) return to
 
-    return lineStringInterpolator(t)
+    return {
+      type: 'LineString',
+      coordinates: coordinateInterpolator(t)
+    }
   }
 }

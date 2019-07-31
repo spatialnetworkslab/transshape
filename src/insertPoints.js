@@ -6,14 +6,19 @@ import { removeClosingPoint, closeRing } from './utils/closingPoint.js'
 export function insertPointsLinearRing (inputLinearRing, numberOfAdditionalPoints) {
   let linearRing = cloneLinearRing(inputLinearRing)
   linearRing = removeClosingPoint(linearRing)
-  linearRing = insertPoints(linearRing, numberOfAdditionalPoints)
+  linearRing = insertPoints(linearRing, numberOfAdditionalPoints, { ring: true })
   linearRing = closeRing(linearRing)
 
   return linearRing
 }
 
-export function insertPoints (lineString, numberOfAdditionalPoints) {
-  const edgeLengths = getEdgeLengths(lineString)
+export function insertPointsLineString (inputLineString, numberOfAdditionalPoints) {
+  const lineString = cloneLinearRing(inputLineString)
+  return insertPoints(lineString, numberOfAdditionalPoints, { ring: false })
+}
+
+function insertPoints (lineString, numberOfAdditionalPoints, { ring }) {
+  const edgeLengths = getEdgeLengths(lineString, ring)
   let orderedEdgeIds = getOrderDescending(edgeLengths)
 
   for (let i = 0; i < numberOfAdditionalPoints; i++) {
@@ -54,10 +59,11 @@ export function cloneLinearRing (linearRing) {
   return clonedLinearRing
 }
 
-function getEdgeLengths (linearRing) {
+function getEdgeLengths (linearRing, ring) {
   const edgeLengths = []
+  const edges = ring ? linearRing.length : linearRing.length - 1
 
-  for (let i = 0; i < linearRing.length; i++) {
+  for (let i = 0; i < edges; i++) {
     const edge = getEdge(linearRing, i)
 
     edgeLengths.push(pointDistance(edge[0], edge[1]))
