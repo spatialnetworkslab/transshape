@@ -1,5 +1,6 @@
-import { insertPointsLineString } from '../insertPoints.js'
+import { insertPointsLineString, cloneLinearRing } from '../insertPoints.js'
 import { interpolate } from 'd3-interpolate'
+import { pointDistance } from '../utils/distance.js'
 
 export default function (from, to) {
   const lengthDifference = from.coordinates.length - to.coordinates.length
@@ -14,6 +15,8 @@ export default function (from, to) {
   if (lengthDifference < 0) {
     preparedFromCoordinates = insertPointsLineString(from.coordinates, -lengthDifference)
   }
+
+  preparedFromCoordinates = reverseIfBetterMatching(preparedFromCoordinates, preparedToCoordinates)
 
   return createInterpolator(from, to, preparedFromCoordinates, preparedToCoordinates)
 }
@@ -30,4 +33,26 @@ function createInterpolator (from, to, preparedFromCoordinates, preparedToCoordi
       coordinates: coordinateInterpolator(t)
     }
   }
+}
+
+function reverseIfBetterMatching (from, to) {
+  const normalTotalSquareDistance = getTotalSquaredDistancePositions(from, to)
+  const fromReversed = cloneLinearRing(from).reverse()
+  const reversedTotalSquareDistance = getTotalSquaredDistancePositions(fromReversed, to)
+
+  if (normalTotalSquareDistance <= reversedTotalSquareDistance) {
+    return from
+  } else {
+    return fromReversed
+  }
+}
+
+function getTotalSquaredDistancePositions (from, to) {
+  let totalSquaredDistance = 0
+
+  for (let i = 0; i < from.length; i++) {
+    totalSquaredDistance += pointDistance(from[i], to[i])
+  }
+
+  return totalSquaredDistance
 }
