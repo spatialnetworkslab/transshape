@@ -26,7 +26,7 @@ export default function transshape (from, to) {
     return multiPolygonToMultiPolygon(from, to)
   }
 
-  if (from.type === 'LineString' && to.type === 'LineStrnig') {
+  if (from.type === 'LineString' && to.type === 'LineString') {
     return lineStringtoLineString(from, to)
   }
 }
