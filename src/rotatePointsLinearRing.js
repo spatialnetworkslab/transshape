@@ -4,7 +4,7 @@
 */
 
 import { pointDistance } from './utils/distance.js'
-import { cloneLinearRing } from './insertPointsLinearRing.js'
+import { cloneLinearRing } from './insertPoints.js'
 import { removeClosingPoint, closeRing } from './utils/closingPoint.js'
 
 export default function rotatePointsLinearRing (inputLinearRing, toLinearRing) {

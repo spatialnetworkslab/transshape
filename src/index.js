@@ -6,6 +6,6 @@ export { implode, explode } from './implodeExplode.js'
 // Helpers
 export { default as cutPolygon } from './cutPolygon/cutPolygon.js'
 export { default as cutPolygons } from './cutPolygon/cutPolygons.js'
-export { default as insertPointsLinearRing } from './insertPointsLinearRing.js'
+export { insertPointsLinearRing } from './insertPoints.js'
 export { default as rotatePointsLinearRing } from './rotatePointsLinearRing.js'
 export { default as matchLinearRings } from './matchLinearRings.js'
