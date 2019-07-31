@@ -3,17 +3,23 @@ import { pointDistance } from './utils/distance.js'
 import { getOrderDescending } from './utils/sort.js'
 import { removeClosingPoint, closeRing } from './utils/closingPoint.js'
 
-export default function insertPointsLinearRing (inputLinearRing, numberOfAdditionalPoints) {
+export function insertPointsLinearRing (inputLinearRing, numberOfAdditionalPoints) {
   let linearRing = cloneLinearRing(inputLinearRing)
   linearRing = removeClosingPoint(linearRing)
+  linearRing = insertPoints(linearRing, numberOfAdditionalPoints)
+  linearRing = closeRing(linearRing)
 
-  const edgeLengths = getEdgeLengths(linearRing)
+  return linearRing
+}
+
+export function insertPoints (lineString, numberOfAdditionalPoints) {
+  const edgeLengths = getEdgeLengths(lineString)
   let orderedEdgeIds = getOrderDescending(edgeLengths)
 
   for (let i = 0; i < numberOfAdditionalPoints; i++) {
     const longestEdgeId = orderedEdgeIds[0]
 
-    const edge = getEdge(linearRing, longestEdgeId)
+    const edge = getEdge(lineString, longestEdgeId)
 
     const edgeLength = edgeLengths[longestEdgeId]
 
@@ -22,22 +28,20 @@ export default function insertPointsLinearRing (inputLinearRing, numberOfAdditio
 
     // Remove old edge
     orderedEdgeIds.shift()
-    linearRing[longestEdgeId] = null
+    lineString[longestEdgeId] = null
     edgeLengths[longestEdgeId] = null
 
     // Insert new edges
     orderedEdgeIds = insertOrderedId(orderedEdgeIds, edgeLengths, longestEdgeId, newEdgesLength)
 
-    linearRing[longestEdgeId] = newEdges[0][0]
-    linearRing.splice(longestEdgeId + 1, 0, newEdges[1][0])
+    lineString[longestEdgeId] = newEdges[0][0]
+    lineString.splice(longestEdgeId + 1, 0, newEdges[1][0])
 
     edgeLengths[longestEdgeId] = newEdgesLength
     edgeLengths.splice(longestEdgeId + 1, 0, newEdgesLength)
   }
 
-  linearRing = closeRing(linearRing)
-
-  return linearRing
+  return lineString
 }
 
 export function cloneLinearRing (linearRing) {

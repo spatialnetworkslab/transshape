@@ -1,5 +1,5 @@
 import { interpolate } from 'd3-interpolate'
-import insertPointsLinearRing from '../insertPointsLinearRing.js'
+import { insertPointsLinearRing } from '../insertPoints.js'
 import rotatePointsLinearRing from '../rotatePointsLinearRing.js'
 import matchLinearRings from '../matchLinearRings.js'
 import calculateCentroid from '../utils/calculateCentroid.js'
