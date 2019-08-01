@@ -1,11 +1,15 @@
 import { pointDistance, linearRingLength } from '../utils/distance.js'
 import { movePointAlongLine } from '../utils/movePointAlongLine.js'
+import matchLineStrings from '../matchLineStrings.js'
 
 export function multiLineStringToLineString (from, to) {
   const numberOfFromLineStrings = from.coordinates.length
   
-  let preparedFromCoordinates = from.coordinates
+  const preparedFromCoordinates = from.coordinates
   let preparedToCoordinates = cutIntoMultiLineString(to.coordinates, numberOfFromLineStrings)
+  preparedToCoordinates = matchLineStrings(preparedToCoordinates, preparedFromCoordinates)
+
+
 }
 
 export function lineStringToMultiLineString (from, to) {
