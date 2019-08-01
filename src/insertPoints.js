@@ -59,7 +59,7 @@ export function cloneLinearRing (linearRing) {
   return clonedLinearRing
 }
 
-function getEdgeLengths (linearRing, ring) {
+export function getEdgeLengths (linearRing, ring) {
   const edgeLengths = []
   const edges = ring ? linearRing.length : linearRing.length - 1
 
