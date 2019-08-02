@@ -61,6 +61,8 @@ function cutIntoMultiLineString (toCoordinates, numberOfLineStrings) {
     }
   }
 
+  console.log(multiLineStringCoordinates)
+
   return multiLineStringCoordinates
 }
 

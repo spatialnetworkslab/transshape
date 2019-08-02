@@ -42,7 +42,7 @@ describe('transshape: MultiLineString to LineString and vice versa', () => {
     const toLineString = {
       type: 'LineString',
       coordinates: [
-        [4, 0], [4, 4], [4, 3]
+        [0, 4], [4, 4], [4, 3]
       ]
     }
 
