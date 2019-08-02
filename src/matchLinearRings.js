@@ -15,7 +15,7 @@ function tooManyRings (rings) {
   return rings.length > 9
 }
 
-export function bestOrderDescending (fromRings, toRings) {
+export function bestOrder (fromRings, toRings) {
   const fromAreas = map(fromRings, polygonArea)
   const toAreas = map(toRings, polygonArea)
 
