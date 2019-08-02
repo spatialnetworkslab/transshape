@@ -1,15 +1,12 @@
 import { pointDistance, linearRingLength } from '../utils/distance.js'
 import { map } from '../utils/array.js'
-import { movePointAlongLine } from '../utils/movePointAlongLine.js'
-import matchLineStrings from '../matchLineStrings.js'
+import movePointAlongLine from '../utils/movePointAlongLine.js'
 import { prepareCoordinates } from './lineStringToLineString.js'
 import { interpolate } from 'd3-interpolate'
 
 export function multiLineStringToLineString (from, to) {
   const numberOfFromLineStrings = from.coordinates.length
-
-  let preparedToCoordinates = cutIntoMultiLineString(to.coordinates, numberOfFromLineStrings)
-  preparedToCoordinates = matchLineStrings(preparedToCoordinates, from.coordinates)
+  const preparedToCoordinates = cutIntoMultiLineString(to.coordinates, numberOfFromLineStrings)
 
   const lineStringInterpolators = createLineStringInterpolators(from.coordinates, preparedToCoordinates)
 
@@ -29,38 +26,61 @@ function cutIntoMultiLineString (toCoordinates, numberOfLineStrings) {
 
 function createCuttingPoints (toCoordinates, numberOfDesiredSegments) {
   const totalLengthTo = linearRingLength(toCoordinates)
-  const cutSizeTo = getCutSize(totalLengthTo, numberOfDesiredSegments)
+  const desiredSegmentSize = totalLengthTo / numberOfDesiredSegments
 
   let newToCoordinates = []
   let cutIndices = []
 
-  for (let i = 0; i < toCoordinates.length - 1; i++) {
+  const lastPointIndex = toCoordinates.length - 1
+  let elapsedDistanceSinceLastCut = 0
+
+  for (let i = 0; i < lastPointIndex; i++) {
     const a = toCoordinates[i]
     const b = toCoordinates[i + 1]
-    const distanceAB = pointDistance(a, b)
-
     newToCoordinates.push(a)
 
-    const numberOfCuts = distanceAB === cutSizeTo ? 0 : Math.floor(distanceAB / cutSizeTo)
-    const segmentCutCoordinates = calculateCutCoordinates(a, b, cutSizeTo, numberOfCuts)
-    const segmentCutIndices = calculateCutIndices(numberOfCuts, newToCoordinates.length)
+    const distanceAB = pointDistance(a, b)
+    const distanceIncludingCurrentSegment = elapsedDistanceSinceLastCut + distanceAB
 
-    newToCoordinates = newToCoordinates.concat(segmentCutCoordinates)
-    cutIndices = cutIndices.concat(segmentCutIndices)
+    if (distanceIncludingCurrentSegment >= desiredSegmentSize) {
+      const numberOfCuts = Math.floor(distanceIncludingCurrentSegment / desiredSegmentSize)
+
+      const segmentCutCoordinates = calculateCutCoordinates(
+        a, b, elapsedDistanceSinceLastCut, desiredSegmentSize, numberOfCuts
+      )
+
+      const segmentCutIndices = calculateCutIndices(numberOfCuts, newToCoordinates.length)
+
+      if (isLastEdge(i, lastPointIndex) && thereIsACutAtTheEnd(segmentCutCoordinates, b)) {
+        segmentCutCoordinates.pop()
+        segmentCutIndices.pop()
+      }
+
+      newToCoordinates = newToCoordinates.concat(segmentCutCoordinates)
+      cutIndices = cutIndices.concat(segmentCutIndices)
+
+      if (!isLastEdge(i, lastPointIndex)) {
+        const lastCut = segmentCutCoordinates[segmentCutCoordinates.length - 1]
+        const distanceLastCutToB = pointDistance(lastCut, b)
+        elapsedDistanceSinceLastCut = distanceLastCutToB
+      }
+    }
+
+    if (distanceIncludingCurrentSegment < desiredSegmentSize) {
+      elapsedDistanceSinceLastCut += distanceAB
+    }
   }
+
+  newToCoordinates.push(toCoordinates[toCoordinates.length - 1])
 
   return [newToCoordinates, cutIndices]
 }
 
-function getCutSize (length, desiredNumberOfPieces) {
-  return length / (desiredNumberOfPieces - 1)
-}
-
-function calculateCutCoordinates (a, b, size, numberOfCuts) {
+function calculateCutCoordinates (a, b, offset, size, numberOfCuts) {
   const cuts = []
 
   for (let i = 1; i <= numberOfCuts; i++) {
-    cuts.push(movePointAlongLine(a, b, (size * i)))
+    cuts.push(movePointAlongLine(a, b, ((size * i) - offset)))
   }
 
   return cuts
@@ -68,6 +88,16 @@ function calculateCutCoordinates (a, b, size, numberOfCuts) {
 
 function calculateCutIndices (numberOfCuts, currentIndex) {
   return new Array(numberOfCuts).fill(currentIndex).map((l, i) => l + i)
+}
+
+function isLastEdge (i, lastPointIndex) {
+  return i === (lastPointIndex - 1)
+}
+
+function thereIsACutAtTheEnd (cutCoordinates, lastPoint) {
+  const lastCut = cutCoordinates[cutCoordinates.length - 1]
+
+  return lastCut[0] === lastPoint[0] && lastCut[1] === lastPoint[1]
 }
 
 function cutLineString (lineStringCoordinates, cutIndices) {
@@ -80,7 +110,7 @@ function cutLineString (lineStringCoordinates, cutIndices) {
   for (let i = 0; i < cutIndices.length - 1; i++) {
     const lineString = getIndexRange(
       lineStringCoordinates,
-      cutIndices[i],
+      cutIndices[i] + 1,
       cutIndices[i + 1]
     )
 
@@ -89,7 +119,7 @@ function cutLineString (lineStringCoordinates, cutIndices) {
 
   const lastLineString = getIndexRange(
     lineStringCoordinates,
-    cutIndices[cutIndices.length - 1],
+    cutIndices[cutIndices.length - 1] + 1,
     lineStringCoordinates.length - 1
   )
 
