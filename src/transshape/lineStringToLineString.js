@@ -3,22 +3,30 @@ import { interpolate } from 'd3-interpolate'
 import { pointDistance } from '../utils/distance.js'
 
 export default function (from, to) {
-  const lengthDifference = from.coordinates.length - to.coordinates.length
+  const [preparedFromCoordinates, preparedToCoordinates] = prepareCoordinates(
+    from.coordinates, to.coordinates
+  )
 
-  let preparedFromCoordinates = from.coordinates
-  let preparedToCoordinates = to.coordinates
+  return createInterpolator(from, to, preparedFromCoordinates, preparedToCoordinates)
+}
+
+export function prepareCoordinates (fromCoordinates, toCoordinates) {
+  const lengthDifference = fromCoordinates.length - toCoordinates.length
+
+  let preparedFromCoordinates = fromCoordinates
+  let preparedToCoordinates = toCoordinates
 
   if (lengthDifference > 0) {
-    preparedToCoordinates = insertPointsLineString(to.coordinates, lengthDifference)
+    preparedToCoordinates = insertPointsLineString(fromCoordinates, lengthDifference)
   }
 
   if (lengthDifference < 0) {
-    preparedFromCoordinates = insertPointsLineString(from.coordinates, -lengthDifference)
+    preparedFromCoordinates = insertPointsLineString(fromCoordinates, -lengthDifference)
   }
 
   preparedFromCoordinates = reverseIfBetterMatching(preparedFromCoordinates, preparedToCoordinates)
 
-  return createInterpolator(from, to, preparedFromCoordinates, preparedToCoordinates)
+  return [preparedFromCoordinates, preparedToCoordinates]
 }
 
 function createInterpolator (from, to, preparedFromCoordinates, preparedToCoordinates) {

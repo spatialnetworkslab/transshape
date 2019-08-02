@@ -1,15 +1,19 @@
 import { pointDistance, linearRingLength } from '../utils/distance.js'
+import { map } from '../utils/array.js'
 import { movePointAlongLine } from '../utils/movePointAlongLine.js'
 import matchLineStrings from '../matchLineStrings.js'
+import { prepareCoordinates } from './lineStringToLineString.js'
+import { interpolate } from 'd3-interpolate'
 
 export function multiLineStringToLineString (from, to) {
   const numberOfFromLineStrings = from.coordinates.length
-  
-  const preparedFromCoordinates = from.coordinates
+
   let preparedToCoordinates = cutIntoMultiLineString(to.coordinates, numberOfFromLineStrings)
-  preparedToCoordinates = matchLineStrings(preparedToCoordinates, preparedFromCoordinates)
+  preparedToCoordinates = matchLineStrings(preparedToCoordinates, from.coordinates)
 
+  const lineStringInterpolators = createLineStringInterpolators(from.coordinates, preparedToCoordinates)
 
+  return createInterpolator(from, to, lineStringInterpolators)
 }
 
 export function lineStringToMultiLineString (from, to) {
@@ -37,7 +41,7 @@ function createCuttingPoints (toCoordinates, numberOfDesiredSegments) {
 
     newToCoordinates.push(a)
 
-    const numberOfCuts = Math.floor(distanceAB / cutSizeTo)
+    const numberOfCuts = distanceAB === cutSizeTo ? 0 : Math.floor(distanceAB / cutSizeTo)
     const segmentCutCoordinates = calculateCutCoordinates(a, b, cutSizeTo, numberOfCuts)
     const segmentCutIndices = calculateCutIndices(numberOfCuts, newToCoordinates.length)
 
@@ -102,4 +106,34 @@ function getIndexRange (array, a, b) {
   }
 
   return itemsInRange
+}
+
+function createLineStringInterpolators (fromCoordinates, toCoordinates) {
+  const interpolators = []
+
+  for (let i = 0; i < fromCoordinates.length; i++) {
+    const fromLineString = fromCoordinates[i]
+    const toLineString = toCoordinates[i]
+
+    const [preparedFromLineString, preparedToLineString] = prepareCoordinates(fromLineString, toLineString)
+    const interpolator = interpolate(preparedFromLineString, preparedToLineString)
+    interpolators.push(interpolator)
+  }
+
+  return interpolators
+}
+
+function createInterpolator (from, to, lineStringInterpolators) {
+  return function interpolator (t) {
+    if (t === 0) return from
+    if (t === 1) return to
+
+    return {
+      type: 'MultiLineString',
+      coordinates: map(
+        lineStringInterpolators,
+        lineStringInterpolator => lineStringInterpolator(t)
+      )
+    }
+  }
 }
