@@ -1,7 +1,7 @@
 import { transshape } from '../../src'
 
 describe('transshape: MultiLineString to LineString and vice versa', () => {
-  test('mls -> ls: same number of points', () => {
+  test('mls -> ls: cut on center point', () => {
     const fromMultiLineString = {
       type: 'MultiLineString',
       coordinates: [
@@ -30,7 +30,32 @@ describe('transshape: MultiLineString to LineString and vice versa', () => {
     expect(interpolator(0.5)).toEqual(expectedHalfWayMultiLineString)
   })
 
-  // test('mls -> ls: differet number of points', () => {
+  test('mls -> ls: new cutting point', () => {
+    const fromMultiLineString = {
+      type: 'MultiLineString',
+      coordinates: [
+        [[0, 1], [2, 1]],
+        [[2, 2], [4, 2]]
+      ]
+    }
 
-  // })
+    const toLineString = {
+      type: 'LineString',
+      coordinates: [
+        [4, 0], [4, 4], [4, 3]
+      ]
+    }
+
+    const interpolator = transshape(fromMultiLineString, toLineString)
+
+    const expectedHalfWayMultiLineString = {
+      type: 'MultiLineString',
+      coordinates: [
+        [[0, 2.5], [2.25, 2.5]],
+        [[2.25, 3], [3.5, 3], [4, 2.5]]
+      ]
+    }
+
+    expect(interpolator(0.5)).toEqual(expectedHalfWayMultiLineString)
+  })
 })
