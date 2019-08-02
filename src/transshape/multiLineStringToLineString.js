@@ -13,7 +13,11 @@ export function multiLineStringToLineString (from, to) {
 }
 
 export function lineStringToMultiLineString (from, to) {
-  // TODO
+  const reverseInterpolator = multiLineStringToLineString(to, from)
+
+  return function interpolator (t) {
+    return reverseInterpolator(1 - t)
+  }
 }
 
 function cutIntoMultiLineString (toCoordinates, numberOfLineStrings) {
@@ -60,8 +64,6 @@ function cutIntoMultiLineString (toCoordinates, numberOfLineStrings) {
       elapsedDistanceSinceLastCut = pointDistance(lastCut, b)
     }
   }
-
-  console.log(multiLineStringCoordinates)
 
   return multiLineStringCoordinates
 }
