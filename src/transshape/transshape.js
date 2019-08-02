@@ -1,7 +1,16 @@
 import polygonToPolygon from './polygonToPolygon.js'
-import { multiPolygonToPolygon, polygonToMultiPolygon } from './multiPolygonToPolygon.js'
+import {
+  multiPolygonToPolygon,
+  polygonToMultiPolygon
+} from './multiPolygonToPolygon.js'
 import multiPolygonToMultiPolygon from './multiPolygonToMultiPolygon.js'
+
 import lineStringtoLineString from './lineStringToLineString.js'
+import {
+  multiLineStringToLineString,
+  lineStringToMultiLineString
+} from './multiLineStringToLineString.js'
+
 import {
   isPolygonOrMultiPolygon,
   isLineStringOrMultiLineString
@@ -10,6 +19,7 @@ import {
 export default function transshape (from, to) {
   ensureValidInput(from, to)
 
+  // Polygon transitions
   if (from.type === 'Polygon' && to.type === 'Polygon') {
     return polygonToPolygon(from, to)
   }
@@ -26,8 +36,17 @@ export default function transshape (from, to) {
     return multiPolygonToMultiPolygon(from, to)
   }
 
+  // LineString transitions
   if (from.type === 'LineString' && to.type === 'LineString') {
     return lineStringtoLineString(from, to)
+  }
+
+  if (from.type === 'MultiLineString' && to.type === 'LineString') {
+    return multiLineStringToLineString(from, to)
+  }
+
+  if (from.type === 'LineString' && to.type === 'MultiLineString') {
+    return lineStringToMultiLineString(from, to)
   }
 }
 
