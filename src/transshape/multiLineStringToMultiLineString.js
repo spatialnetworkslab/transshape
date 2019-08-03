@@ -1,6 +1,8 @@
 import { assignCuts } from './cutPolygon/cutPolygons.js'
 import { linearRingLength } from '../utils/distance.js'
-import { cutLineString } from './multiLineStringToLineString.js'
+import {
+  cutLineString, createLineStringInterpolators, createMultiLineStringInterpolator
+} from './multiLineStringToLineString.js'
 import matchLineStrings from '../matchLineStrings.js'
 
 export default function multiLineStringToMultiLineString (from, to) {
@@ -19,7 +21,9 @@ export default function multiLineStringToMultiLineString (from, to) {
 
   fromLineStrings = matchLineStrings(fromLineStrings, toLineStrings)
 
-  return createInterpolator(from, to, fromLineStrings, toLineStrings)
+  const lineStringInterpolators = createLineStringInterpolators(fromLineStrings, toLineStrings)
+
+  return createMultiLineStringInterpolator(from, to, lineStringInterpolators)
 }
 
 function splitLineStrings (lineStrings, numberOfDesiredLineStrings) {
@@ -58,8 +62,4 @@ function getLengths (lineStrings) {
   }
 
   return lengths
-}
-
-function createInterpolator (from, to, fromLineStrings, toLineStrings) {
-
 }
