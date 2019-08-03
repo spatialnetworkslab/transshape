@@ -6,7 +6,7 @@ import { interpolate } from 'd3-interpolate'
 
 export function multiLineStringToLineString (from, to) {
   const numberOfFromLineStrings = from.coordinates.length
-  const preparedToCoordinates = cutIntoMultiLineString(to.coordinates, numberOfFromLineStrings)
+  const preparedToCoordinates = cutLineString(to.coordinates, numberOfFromLineStrings)
   const lineStringInterpolators = createLineStringInterpolators(from.coordinates, preparedToCoordinates)
 
   return createInterpolator(from, to, lineStringInterpolators)
@@ -20,7 +20,7 @@ export function lineStringToMultiLineString (from, to) {
   }
 }
 
-function cutIntoMultiLineString (toCoordinates, numberOfLineStrings) {
+export function cutLineString (toCoordinates, numberOfLineStrings) {
   const multiLineStringCoordinates = []
 
   const totalLengthTo = linearRingLength(toCoordinates)
