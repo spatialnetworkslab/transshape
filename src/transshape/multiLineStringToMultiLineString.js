@@ -1,4 +1,4 @@
-import { assignCuts } from './cutPolygon/cutPolygons.js'
+import { assignCuts } from '../cutPolygon/cutPolygons.js'
 import { linearRingLength } from '../utils/distance.js'
 import {
   cutLineString, createLineStringInterpolators, createMultiLineStringInterpolator
