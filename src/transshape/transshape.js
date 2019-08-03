@@ -10,6 +10,7 @@ import {
   multiLineStringToLineString,
   lineStringToMultiLineString
 } from './multiLineStringToLineString.js'
+import multiLineStringToMultiLineString from './multiLineStringToMultiLineString.js'
 
 import {
   isPolygonOrMultiPolygon,
@@ -47,6 +48,10 @@ export default function transshape (from, to) {
 
   if (from.type === 'LineString' && to.type === 'MultiLineString') {
     return lineStringToMultiLineString(from, to)
+  }
+
+  if (from.type === 'MultiLineString' && to.type === 'MultiLineString') {
+    return multiLineStringToMultiLineString(from, to)
   }
 }
 

@@ -6,10 +6,10 @@ import { interpolate } from 'd3-interpolate'
 
 export function multiLineStringToLineString (from, to) {
   const numberOfFromLineStrings = from.coordinates.length
-  const preparedToCoordinates = cutIntoMultiLineString(to.coordinates, numberOfFromLineStrings)
+  const preparedToCoordinates = cutLineString(to.coordinates, numberOfFromLineStrings)
   const lineStringInterpolators = createLineStringInterpolators(from.coordinates, preparedToCoordinates)
 
-  return createInterpolator(from, to, lineStringInterpolators)
+  return createMultiLineStringInterpolator(from, to, lineStringInterpolators)
 }
 
 export function lineStringToMultiLineString (from, to) {
@@ -20,7 +20,7 @@ export function lineStringToMultiLineString (from, to) {
   }
 }
 
-function cutIntoMultiLineString (toCoordinates, numberOfLineStrings) {
+export function cutLineString (toCoordinates, numberOfLineStrings) {
   const multiLineStringCoordinates = []
 
   const totalLengthTo = linearRingLength(toCoordinates)
@@ -82,7 +82,7 @@ function pointsEqual (a, b) {
   return a[0] === b[0] && a[1] === b[1]
 }
 
-function createLineStringInterpolators (fromCoordinates, toCoordinates) {
+export function createLineStringInterpolators (fromCoordinates, toCoordinates) {
   const interpolators = []
 
   for (let i = 0; i < fromCoordinates.length; i++) {
@@ -97,7 +97,7 @@ function createLineStringInterpolators (fromCoordinates, toCoordinates) {
   return interpolators
 }
 
-function createInterpolator (from, to, lineStringInterpolators) {
+export function createMultiLineStringInterpolator (from, to, lineStringInterpolators) {
   return function interpolator (t) {
     if (t === 0) return from
     if (t === 1) return to
