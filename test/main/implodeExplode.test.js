@@ -54,6 +54,31 @@ describe('implode / explode', () => {
     expect(roundedOutput).toEqual(halfwayMultiPolygon)
   })
 
+  test('implode: LineString', () => {
+    const lineString = {
+      type: 'LineString',
+      coordinates: [
+        [1, 1], [1, 4], [4, 4], [4, 1]
+      ]
+    }
+
+    const halfwayLineString = {
+      type: 'LineString',
+      coordinates: [
+        [1.75, 1.75], [1.75, 3.25], [3.25, 3.25], [3.25, 1.75]
+      ]
+    }
+
+    const interpolator = implode(lineString)
+    const roundedOutput = roundGeometry(interpolator(0.5))
+
+    expect(roundedOutput).toEqual(halfwayLineString)
+  })
+
+  test('implode: MultiLineString', () => {
+
+  })
+
   test('explode: Polygon', () => {
     const polygon = {
       type: 'Polygon',

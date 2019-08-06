@@ -10,7 +10,11 @@ export function implode (geometry) {
   ensureValidInput(geometry)
 
   const centroid = calculateCentroid(geometry)
-  const implosionPoint = createSmallPolygonAroundPoint(centroid)
+  let implosionPoint = createSmallPolygonAroundPoint(centroid)
+
+  if (isLineStringOrMultiLineString(geometry)) {
+    implosionPoint = convertPolygonToLineString(implosionPoint)
+  }
 
   return transshape(geometry, implosionPoint)
 }
@@ -19,13 +23,17 @@ export function explode (geometry) {
   ensureValidInput(geometry)
 
   const centroid = calculateCentroid(geometry)
-  const explosionPoint = createSmallPolygonAroundPoint(centroid)
+  let explosionPoint = createSmallPolygonAroundPoint(centroid)
+
+  if (isLineStringOrMultiLineString(geometry)) {
+    explosionPoint = convertPolygonToLineString(explosionPoint)
+  }
 
   return transshape(explosionPoint, geometry)
 }
 
 function ensureValidInput (geometry) {
-  if (!isPolygonOrMultiPolygon(geometry) || !isLineStringOrMultiLineString(geometry)) {
+  if (!(isPolygonOrMultiPolygon(geometry) || isLineStringOrMultiLineString(geometry))) {
     throw new Error('Invalid input')
   }
 }
@@ -35,5 +43,15 @@ function createSmallPolygonAroundPoint (point) {
   return {
     type: 'Polygon',
     coordinates: [linearRingAroundPoint]
+  }
+}
+
+function convertPolygonToLineString (geometry) {
+  const coordinates = geometry.coordinates[0]
+  coordinates.pop()
+
+  return {
+    type: 'LineString',
+    coordinates
   }
 }

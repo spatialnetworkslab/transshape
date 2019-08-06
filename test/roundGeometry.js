@@ -1,4 +1,4 @@
-import { isPolygon, isMultiPolygon } from '../src/utils/geometryDetectors.js'
+import { isPolygon, isMultiPolygon, isLineString, isMultiLineString } from '../src/utils/geometryDetectors.js'
 
 export default function roundGeometry (geometry) {
   if (isPolygon(geometry)) {
@@ -8,9 +8,17 @@ export default function roundGeometry (geometry) {
   if (isMultiPolygon(geometry)) {
     return roundValuesMultiPolygon(geometry)
   }
+
+  if (isLineString(geometry)) {
+    return roundValuesLineString(geometry)
+  }
+
+  if (isMultiLineString(geometry)) {
+    return roundValuesMultiLineString(geometry)
+  }
 }
 
-function roundValuesPolygon (polygon, decimals = 2) {
+function roundValuesPolygon (polygon) {
   const roundedCoordinates = roundPolygonCoordinates(polygon.coordinates)
 
   return {
@@ -19,7 +27,7 @@ function roundValuesPolygon (polygon, decimals = 2) {
   }
 }
 
-function roundValuesMultiPolygon (multiPolygon, decimals = 2) {
+function roundValuesMultiPolygon (multiPolygon) {
   const roundedPolygons = []
 
   for (let i = 0; i < multiPolygon.coordinates.length; i++) {
@@ -34,11 +42,41 @@ function roundValuesMultiPolygon (multiPolygon, decimals = 2) {
   }
 }
 
+function roundValuesLineString (lineString) {
+  const roundedCoordinates = roundLineStringCoordinates(lineString.coordinates)
+
+  return {
+    type: 'LineString',
+    coordinates: roundedCoordinates
+  }
+}
+
+function roundValuesMultiLineString (multiLineString) {
+  const roundedLineStrings = []
+
+  for (let i = 0; i < multiLineString.coordinates.length; i++) {
+    const lineStringCoordinates = multiLineString.coordinates[i]
+
+    roundedLineStrings.push(roundLineStringCoordinates(lineStringCoordinates))
+  }
+
+  return {
+    type: 'MultiLineString',
+    coordinates: roundedLineStrings
+  }
+}
+
 function roundPolygonCoordinates (polygonCoordinates, decimals = 2) {
   return polygonCoordinates.map(linearRing => {
     return linearRing.map(point => {
       return point.map(value => round(value, decimals))
     })
+  })
+}
+
+function roundLineStringCoordinates (lineStringCoordinates, decimals = 2) {
+  return lineStringCoordinates.map(point => {
+    return point.map(value => round(value, decimals))
   })
 }
 
