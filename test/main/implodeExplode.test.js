@@ -76,7 +76,26 @@ describe('implode / explode', () => {
   })
 
   test('implode: MultiLineString', () => {
+    const multiLineString = {
+      type: 'MultiLineString',
+      coordinates: [
+        [[1, 4], [1, 5], [4, 5], [4, 4]],
+        [[1, 2], [1, 1], [4, 1], [4, 2]]
+      ]
+    }
 
+    const halfwayMultiLineString = {
+      type: 'MultiLineString',
+      coordinates: [
+        [[1.75, 3.5], [1.75, 4], [3.25, 4], [3.25, 3.5]],
+        [[1.75, 2.5], [1.75, 2], [3.25, 2], [3.25, 2.5]]
+      ]
+    }
+
+    const interpolator = implode(multiLineString)
+    const roundedOutput = roundGeometry(interpolator(0.5))
+
+    expect(roundedOutput).toEqual(halfwayMultiLineString)
   })
 
   test('explode: Polygon', () => {
