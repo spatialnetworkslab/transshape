@@ -5,7 +5,6 @@ import {
   isPolygonOrMultiPolygon,
   isLineStringOrMultiLineString
 } from '../utils/geometryDetectors.js'
-import lineStringToLineString from './lineStringToLineString.js'
 
 export default function transshapeLayer (fromLayer, toLayer) {
   ensureValidInput(fromLayer, toLayer)
@@ -22,7 +21,7 @@ function ensureValidInput (fromLayer, toLayer) {
   }
 
   if (isLineStringOrMultiLineString(first(fromLayer))) {
-    if (bothEvery(fromLayer, toLayer, lineStringToLineString)) return
+    if (bothEvery(fromLayer, toLayer, isLineStringOrMultiLineString)) return
   }
 
   throw new Error('Invalid input')
