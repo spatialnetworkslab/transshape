@@ -2,7 +2,7 @@ import { transshapeLayer } from '../../src'
 import roundGeometry from '../roundGeometry.js'
 
 describe('transshapeLayer', () => {
-  test('keys overlap', () => {
+  test('Polygon: same keys', () => {
     const fromLayer = {
       1: {
         type: 'Polygon',
@@ -63,7 +63,7 @@ describe('transshapeLayer', () => {
     expect(layerInterpolator(0.5)).toEqual(expectedHalfwayLayer)
   })
 
-  test('keys don\'t  overlap', () => {
+  test('Polygon: different keys', () => {
     const fromLayer = {
       1: {
         type: 'Polygon',
