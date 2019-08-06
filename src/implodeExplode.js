@@ -1,7 +1,10 @@
 import transshape from './transshape/transshape.js'
 import calculateCentroid from './utils/calculateCentroid.js'
 import { makeSmallRectangleAroundPoint } from './transshape/polygonToPolygon.js'
-import { isPolygonOrMultiPolygon } from './utils/geometryDetectors.js'
+import {
+  isPolygonOrMultiPolygon,
+  isLineStringOrMultiLineString
+} from './utils/geometryDetectors.js'
 
 export function implode (geometry) {
   ensureValidInput(geometry)
@@ -22,7 +25,7 @@ export function explode (geometry) {
 }
 
 function ensureValidInput (geometry) {
-  if (!isPolygonOrMultiPolygon(geometry)) {
+  if (!isPolygonOrMultiPolygon(geometry) || !isLineStringOrMultiLineString(geometry)) {
     throw new Error('Invalid input')
   }
 }
