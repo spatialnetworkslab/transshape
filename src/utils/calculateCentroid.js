@@ -1,7 +1,8 @@
-import { 
+import {
   isLinearRing, isPolygon, isMultiPolygon, isLineString, isMultiLineString
 } from './geometryDetectors.js'
 import polygonArea from './polygonArea.js'
+import { linearRingLength } from '../utils/distance.js'
 
 export default function calculateCentroid (geometry) {
   if (isLinearRing(geometry)) {
@@ -82,4 +83,19 @@ function calculateLineStringCentroid (lineString) {
 function calculateMultiLineStringCentroid (multiLineString) {
   // We will take the centroid of each LineString
   // and take the weighted (by length) center of these.
+  let x = 0
+  let y = 0
+  let totalLength = 0
+
+  for (let i = 0; i < multiLineString.coordinates.length; i++) {
+    const lineString = multiLineString.coordinates[i]
+    const lineStringCentroid = calculateLinearRingCentroid(lineString)
+    const length = linearRingLength(lineString)
+
+    x += lineStringCentroid[0] * length
+    y += lineStringCentroid[1] * length
+    totalLength += length
+  }
+
+  return [x / totalLength, y / totalLength]
 }
