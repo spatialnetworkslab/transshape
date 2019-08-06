@@ -1,7 +1,11 @@
 import transshape from './transshape.js'
 import { implode, explode } from '../implodeExplode.js'
 import { every } from '../utils/array.js'
-import { isPolygonOrMultiPolygon } from '../utils/geometryDetectors.js'
+import {
+  isPolygonOrMultiPolygon,
+  isLineStringOrMultiLineString
+} from '../utils/geometryDetectors.js'
+import lineStringToLineString from './lineStringToLineString.js'
 
 export default function transshapeLayer (fromLayer, toLayer) {
   ensureValidInput(fromLayer, toLayer)
@@ -13,8 +17,23 @@ export default function transshapeLayer (fromLayer, toLayer) {
 }
 
 function ensureValidInput (fromLayer, toLayer) {
-  return every(Object.values(fromLayer), isPolygonOrMultiPolygon) &&
-    every(Object.values(fromLayer), isPolygonOrMultiPolygon)
+  if (isPolygonOrMultiPolygon(first(fromLayer))) {
+    if (bothEvery(fromLayer, toLayer, isPolygonOrMultiPolygon)) return
+  }
+
+  if (isLineStringOrMultiLineString(first(fromLayer))) {
+    if (bothEvery(fromLayer, toLayer, lineStringToLineString)) return
+  }
+
+  throw new Error('Invalid input')
+}
+
+function first (layer) {
+  return layer[Object.keys(layer)[0]]
+}
+
+function bothEvery (a, b, func) {
+  return every(Object.values(a), func) && every(Object.values(b), func)
 }
 
 function getKeyOverlap (fromLayer, toLayer) {

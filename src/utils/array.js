@@ -19,7 +19,7 @@ export function map (array, callback) {
 
 export function every (array, condition) {
   for (let i = 0; i < array.length; i++) {
-    if (condition(array[i], i)) return false
+    if (!condition(array[i], i)) return false
   }
 
   return true
