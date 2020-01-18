@@ -1,5 +1,5 @@
 {
-  "name": "transshape",
+  "name": "@snlab/transshape",
   "version": "0.1.0",
   "main": "dist/transshape.cjs.js",
   "module": "dist/transshape.esm.js",
@@ -40,6 +40,7 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "jest",
+    "prepublishOnly": "npm run build",
     "sandbox:autobuild": "rollup -c sandbox/rollup.config.js -w",
     "sandbox:serve": "sirv sandbox/public --dev -s",
     "sandbox:dev": "run-p sandbox:serve sandbox:autobuild"
