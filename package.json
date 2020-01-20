@@ -1,6 +1,6 @@
 {
   "name": "@snlab/transshape",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "dist/transshape.cjs.js",
   "module": "dist/transshape.esm.js",
   "repository": "https://github.com/spatialnetworkslab/transshape.git",
