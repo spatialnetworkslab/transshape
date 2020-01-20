@@ -3,7 +3,6 @@
   "version": "0.1.1",
   "main": "dist/transshape.cjs.js",
   "module": "dist/transshape.esm.js",
-  "browser": "dist/transshape.umd.js",
   "repository": "https://github.com/spatialnetworkslab/transshape.git",
   "author": "Luuc van der Zee <luuc_v_d_zee@hotmail.com>",
   "license": "MIT",
