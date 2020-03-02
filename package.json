@@ -8,7 +8,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-env": "^7.8.6",
     "d3-geo": "^1.11.9",
     "d3-scale": "^3.2.1",
     "eslint": "^6.8.0",
