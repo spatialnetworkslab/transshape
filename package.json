@@ -7,7 +7,7 @@
   "author": "Luuc van der Zee <luuc_v_d_zee@hotmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.11.4",
+    "@babel/core": "^7.14.2",
     "@babel/preset-env": "^7.11.0",
     "d3-geo": "^2.0.1",
     "d3-scale": "^3.2.1",
